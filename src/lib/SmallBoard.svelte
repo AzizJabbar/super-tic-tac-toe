@@ -2,7 +2,9 @@
   import Square from "./Square.svelte";
   import { turn, isNewGame } from "../store/store";
   import checkWin from "../utils/checkWin";
-  import { onDestroy } from "svelte";
+  import Fa from "svelte-fa";
+  // @ts-ignore
+  import { faX, faO } from "@fortawesome/free-solid-svg-icons";
 
   export let handleSmallBoardWin;
   export let updateActiveBoard;
@@ -33,12 +35,16 @@
 <main>
   {#if isWin}
     <div class="winningSquare">
-      {isWin}
+      {#if isWin === "X"}
+        <Fa icon={faX} />
+      {:else if isWin === "O"}
+        <Fa icon={faO} />
+      {/if}
     </div>
   {:else}
     <div class="smallBoard">
       {#each boardStatus as item, i}
-        <Square {isActive} handleSquareClick={() => handleSquareClick(i)} mark={boardStatus[i]} />
+        <Square {i} {isActive} handleSquareClick={() => handleSquareClick(i)} mark={boardStatus[i]} />
       {/each}
     </div>
   {/if}
@@ -54,6 +60,12 @@
   .winningSquare {
     width: 100%;
     height: 100%;
-    border: 1px solid #000;
+    border: 2px solid #fff;
+    font-size: 6rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border-radius);
   }
 </style>
