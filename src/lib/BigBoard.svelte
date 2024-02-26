@@ -13,11 +13,13 @@
     bigBoardStatus.set(newStatus);
     isGameEnd.set(checkWin($bigBoardStatus));
     if ($isGameEnd) {
-      isPlaying.set(false);
-      isActive = Array(9).fill(false);
       const element = document.getElementById("bigBoard");
 
       element.style.left = "30%";
+      isActive = Array(9).fill(false);
+      setTimeout(() => {
+        isPlaying.set(false);
+      }, 1000);
     }
   }
 

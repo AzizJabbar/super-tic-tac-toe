@@ -10,25 +10,30 @@
     isPlaying.set(true);
   }
 
-  $: if ($isGameEnd) {
+  $: if (!$isPlaying && $isGameEnd) {
     document.getElementById("menu").style.opacity = "1";
+    document.getElementById("turn").style.opacity = "0";
+  }
+
+  $: if ($isPlaying) {
+    document.getElementById("turn").style.opacity = "1";
+  }
+  $: if ($isGameEnd) {
+    document.getElementById("turn").style.opacity = "0";
   }
 </script>
 
 <main>
-  {#if $isPlaying}
-    <div class="turn">
-      Turn:
-      {#if $turn === "X"}
-        <Fa icon={faX} />
-      {:else if $turn === "O"}
-        <Fa icon={faO} />
-      {/if}
-    </div>
-  {/if}
+  <div class="turn" id="turn">
+    Turn:
+    {#if $turn === "X"}
+      <Fa icon={faX} />
+    {:else if $turn === "O"}
+      <Fa icon={faO} />
+    {/if}
+  </div>
   <div class="game-container">
     <BigBoard />
-    <!-- {#if $showMenu} -->
     <div class="menu" id="menu">
       <div class="title">
         {#if $isGameEnd}
@@ -46,7 +51,6 @@
       </div>
       <!-- <div class="other-button">How to play</div> -->
     </div>
-    <!-- {/if} -->
   </div>
 </main>
 
@@ -85,6 +89,7 @@
     left: 70%;
     width: max-content;
     transform: translate(-50%, -50%);
+    opacity: 1;
   }
 
   .other-button {
@@ -113,5 +118,7 @@
     transform: translateX(-50%);
     font-weight: 700;
     letter-spacing: 0.5px;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
   }
 </style>
