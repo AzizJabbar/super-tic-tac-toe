@@ -34,11 +34,15 @@
 
 <main>
   {#if isWin}
-    <div class="winningSquare">
+    <div class="{isWin === 'O' ? 'winningSquare border-red' : ''} {isWin === 'X' ? 'winningSquare border-blue' : ''}">
       {#if isWin === "X"}
-        <Fa icon={faX} />
+        <span class="x">
+          <Fa icon={faX} />
+        </span>
       {:else if isWin === "O"}
-        <Fa icon={faO} />
+        <span class="o">
+          <Fa icon={faO} />
+        </span>
       {/if}
     </div>
   {:else}
@@ -60,12 +64,18 @@
   .winningSquare {
     width: 100%;
     height: 100%;
-    border: 2px solid #fff;
+    border: var(--line-size) solid #fff;
     font-size: 6rem;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: var(--border-radius);
+  }
+  .border-red {
+    border-color: var(--red);
+  }
+  .border-blue {
+    border-color: var(--blue);
   }
 </style>

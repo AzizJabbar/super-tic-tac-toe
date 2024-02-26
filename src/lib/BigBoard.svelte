@@ -1,7 +1,9 @@
 <script>
   import SmallBoard from "./SmallBoard.svelte";
-  import { bigBoardStatus, isGameEnd, isNewGame } from "../store/store";
+  import { bigBoardStatus, isGameEnd, isNewGame, isPlaying } from "../store/store";
   import checkWin from "../utils/checkWin";
+  import { slide } from "svelte/transition";
+  import { flip } from "svelte/animate";
 
   let isActive = Array(9).fill(true);
 
@@ -11,33 +13,40 @@
     bigBoardStatus.set(newStatus);
     isGameEnd.set(checkWin($bigBoardStatus));
     if ($isGameEnd) {
+      isPlaying.set(false);
       isActive = Array(9).fill(false);
+      const element = document.getElementById("bigBoard");
+
+      element.style.left = "30%";
     }
   }
 
-  function handleReset() {
+  $: if ($isNewGame) {
     bigBoardStatus.set(Array(9).fill(null));
-    isGameEnd.set(null);
+    setTimeout(() => {
+      isGameEnd.set(null);
+    }, 500);
     isActive = Array(9).fill(true);
-    isNewGame.set(true);
+  }
+
+  $: if ($isPlaying) {
+    const element = document.getElementById("bigBoard");
+    element.style.left = "50%";
+    isActive = Array(9).fill(true);
   }
 
   function updateActiveBoard(i) {
-    if ($bigBoardStatus[i]) {
-      isActive = $bigBoardStatus.map((e) => e === null);
-    } else {
-      isActive = Array(9).fill(false);
-      isActive[i] = true;
-    }
+    // if ($bigBoardStatus[i]) {
+    //   isActive = $bigBoardStatus.map((e) => e === null);
+    // } else {
+    //   isActive = Array(9).fill(false);
+    //   isActive[i] = true;
+    // }
   }
 </script>
 
 <main>
-  {#if $isGameEnd}
-    {$isGameEnd} is the winner
-    <button on:click={handleReset}>reset</button>
-  {/if}
-  <div class="bigBoard">
+  <div class="bigBoard" id="bigBoard">
     {#each $bigBoardStatus as item, i}
       <SmallBoard
         updateActiveBoard={(i) => updateActiveBoard(i)}
@@ -53,7 +62,14 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 10px;
+    gap: 40px;
     width: fit-content;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    will-change: left;
+    transition: left 1s ease-in-out;
+    position: absolute;
+    z-index: 10;
   }
 </style>

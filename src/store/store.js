@@ -2,7 +2,8 @@ import { writable } from "svelte/store";
 
 const turn = writable("X");
 const isGameEnd = writable(null);
-const isNewGame = writable(true);
+const isNewGame = writable(false);
+const isPlaying = writable(false);
 const bigBoardStatus = writable(Array(9).fill(null));
 
-export { turn, bigBoardStatus, isGameEnd, isNewGame };
+export { turn, bigBoardStatus, isGameEnd, isNewGame, isPlaying };
