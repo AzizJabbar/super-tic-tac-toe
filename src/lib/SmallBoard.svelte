@@ -11,19 +11,26 @@
   export let isActive;
   let boardStatus = Array(9).fill(null);
   let isWin = null;
+  let filledSquares = 0;
 
   $: if ($isNewGame) {
     boardStatus = Array(9).fill(null);
     isWin = null;
+    filledSquares = 0;
   }
 
   function handleSquareClick(i) {
     boardStatus[i] = $turn;
+    filledSquares++;
     isWin = checkWin(boardStatus);
-    updateActiveBoard(i);
+    if (!isWin && filledSquares === 9) {
+      isWin = "Draw"; // It's a draw if all filled and no winner
+    }
+
     if (isWin) {
       handleSmallBoardWin(isWin);
     }
+    updateActiveBoard(i);
     if ($isNewGame) {
       isNewGame.set(false);
     }

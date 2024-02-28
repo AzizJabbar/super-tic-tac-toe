@@ -21,6 +21,12 @@
         isPlaying.set(false);
       }, 1000);
     }
+    if (winner === "Draw") {
+      let newStatus = $bigBoardStatus.slice();
+      newStatus[i] = winner;
+      bigBoardStatus.set(newStatus);
+      checkDraw(); // Check the overall game for draw
+    }
   }
 
   $: if ($isNewGame) {
@@ -37,13 +43,24 @@
     isActive = Array(9).fill(true);
   }
 
+  $: if ($isGameEnd) {
+    isActive = Array(9).fill(false);
+  }
+
+  function checkDraw() {
+    if ($bigBoardStatus.every((status) => status !== null) && !checkWin($bigBoardStatus)) {
+      isGameEnd.set("Draw"); // Overall draw
+      isPlaying.set(false);
+    }
+  }
+
   function updateActiveBoard(i) {
-    // if ($bigBoardStatus[i]) {
-    //   isActive = $bigBoardStatus.map((e) => e === null);
-    // } else {
-    //   isActive = Array(9).fill(false);
-    //   isActive[i] = true;
-    // }
+    if ($bigBoardStatus[i]) {
+      isActive = $bigBoardStatus.map((e) => e === null);
+    } else {
+      isActive = Array(9).fill(false);
+      isActive[i] = true;
+    }
   }
 </script>
 

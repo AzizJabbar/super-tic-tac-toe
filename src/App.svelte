@@ -37,7 +37,11 @@
     <div class="menu" id="menu">
       <div class="title">
         {#if $isGameEnd}
-          {$isGameEnd} is the winner
+          {#if $isGameEnd === "Draw"}
+            Game is draw
+          {:else}
+            {$isGameEnd} is the winner
+          {/if}
         {:else}
           Super Tic Tac Toe
         {/if}
