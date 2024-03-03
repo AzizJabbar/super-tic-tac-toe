@@ -8,6 +8,9 @@
     document.getElementById("menu").style.opacity = "0";
     isNewGame.set(true);
     isPlaying.set(true);
+    setTimeout(() => {
+      intervalId.set(null);
+    }, 1000);
   }
 
   function runDemo() {
@@ -28,14 +31,15 @@
 
   $: if (!$isPlaying && $isGameEnd) {
     document.getElementById("menu").style.opacity = "1";
+    document.getElementById("menu").style.pointerEvents = "auto";
     document.getElementById("turn").style.opacity = "0";
   }
 
   $: if ($isPlaying) {
     document.getElementById("menu").style.pointerEvents = "auto";
     document.getElementById("turn").style.opacity = "1";
+    document.getElementById("menu").style.pointerEvents = "none";
     clearInterval($intervalId);
-    intervalId.set(null);
   }
   $: if ($isGameEnd) {
     document.getElementById("turn").style.opacity = "0";
@@ -116,6 +120,17 @@
     opacity: 1;
   }
 
+  @media (max-width: 1100px) {
+    .menu {
+      left: 75%;
+    }
+  }
+  @media (max-width: 940px) {
+    .menu {
+      left: 90%;
+    }
+  }
+
   .other-button {
     background-color: rgba(0, 0, 0, 0.3);
     width: 100%;
@@ -152,6 +167,20 @@
     }
     .start-button {
       font-size: 1.75rem;
+      padding: 0.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .menu {
+      left: 50%;
+      top: 70%;
+    }
+    .title {
+      font-size: 2rem;
+    }
+    .start-button {
+      font-size: 1.5rem;
       padding: 0.5rem;
     }
   }

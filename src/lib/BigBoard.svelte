@@ -15,7 +15,9 @@
     if ($isGameEnd) {
       const element = document.getElementById("bigBoard");
 
-      element.style.left = "30%";
+      if (window.innerWidth > 768) {
+        element.style.left = "30%";
+      }
       isActive = Array(9).fill(false);
       setTimeout(() => {
         isPlaying.set(false);
@@ -90,5 +92,11 @@
     transition: left 1s ease-in-out;
     position: absolute;
     z-index: 10;
+  }
+  @media (max-width: 768px) {
+    .bigBoard {
+      top: 35%;
+      left: 50%;
+    }
   }
 </style>

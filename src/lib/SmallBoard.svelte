@@ -79,6 +79,12 @@
     align-items: center;
     border-radius: var(--border-radius);
   }
+
+  @media (max-width: 768px) {
+    .winningSquare {
+      font-size: 4.5em;
+    }
+  }
   .border-red {
     border-color: var(--red);
   }

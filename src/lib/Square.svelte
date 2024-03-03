@@ -37,7 +37,10 @@
     class:noBorderRight={i === 2 || i === 5 || i === 8}
     class:noBorderLeft={i === 6 || i === 3 || i === 0}
     class:noBorderBottom={i === 6 || i === 7 || i === 8}
-    on:click={handleSquareClick}
+    on:click={() => {
+      handleMouseLeave();
+      handleSquareClick();
+    }}
     role="button"
   >
     {#if isMouseOver && childComponent}
@@ -91,5 +94,13 @@
   }
   .noBorderBottom {
     border-bottom: 0;
+  }
+  @media (max-width: 768px) {
+    .square {
+      font-size: 1.3rem;
+    }
+    .active {
+      border-width: calc(0.8 * (var(--line-size)));
+    }
   }
 </style>

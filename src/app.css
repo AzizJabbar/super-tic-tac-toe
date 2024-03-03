@@ -47,3 +47,8 @@
     --square-size: 40px;
   }
 }
+@media (max-width: 768px) {
+  :root {
+    --square-size: 30px;
+  }
+}
