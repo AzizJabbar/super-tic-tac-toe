@@ -2,6 +2,7 @@
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
   import { turn } from "../store/store";
+  import { intervalId } from "../store/store";
   export let mark;
 
   export let handleSquareClick;
@@ -27,9 +28,11 @@
   <!-- svelte-ignore a11y-interactive-supports-focus -->
   <div
     class="square"
+    id={`square${i}`}
     on:mouseenter={handleMouseEnter}
     on:mouseleave={handleMouseLeave}
     class:active={isActive && mark === null}
+    style={`pointer-events: ${!$intervalId && isActive && mark === null ? "auto" : "none"};`}
     class:noBorderUp={i === 0 || i === 1 || i === 2}
     class:noBorderRight={i === 2 || i === 5 || i === 8}
     class:noBorderLeft={i === 6 || i === 3 || i === 0}
@@ -73,7 +76,6 @@
   .active {
     opacity: 1;
     cursor: pointer;
-    pointer-events: auto;
     border-width: calc(1 * (var(--line-size)));
     border-color: lightskyblue;
     filter: drop-shadow(0px 0 4px lightskyblue);

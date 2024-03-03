@@ -1,6 +1,6 @@
 <script>
   import BigBoard from "./lib/BigBoard.svelte";
-  import { turn, isNewGame, isGameEnd, isPlaying } from "./store/store";
+  import { turn, isNewGame, isGameEnd, isPlaying, intervalId } from "./store/store";
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
 
@@ -10,13 +10,32 @@
     isPlaying.set(true);
   }
 
+  function runDemo() {
+    intervalId.set(
+      setInterval(() => {
+        let activeSquare = document.querySelectorAll(".active");
+        if ($isPlaying || !activeSquare.length) return;
+        let randomSquare = activeSquare[Math.floor(Math.random() * activeSquare.length)];
+        // @ts-ignore
+        randomSquare.click();
+      }, 1500)
+    );
+  }
+
+  $: if (!$isPlaying && !$isGameEnd) {
+    runDemo();
+  }
+
   $: if (!$isPlaying && $isGameEnd) {
     document.getElementById("menu").style.opacity = "1";
     document.getElementById("turn").style.opacity = "0";
   }
 
   $: if ($isPlaying) {
+    document.getElementById("menu").style.pointerEvents = "auto";
     document.getElementById("turn").style.opacity = "1";
+    clearInterval($intervalId);
+    intervalId.set(null);
   }
   $: if ($isGameEnd) {
     document.getElementById("turn").style.opacity = "0";
@@ -36,7 +55,7 @@
     <BigBoard />
     <div class="menu" id="menu">
       <div class="title">
-        {#if $isGameEnd}
+        {#if $isGameEnd && !$intervalId}
           {#if $isGameEnd === "Draw"}
             Game is draw
           {:else}
@@ -47,7 +66,7 @@
         {/if}
       </div>
       <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
-        {#if $isGameEnd}
+        {#if $isGameEnd && !$intervalId}
           Start a New Game
         {:else}
           Play

@@ -69,8 +69,8 @@
     width: fit-content;
   }
   .winningSquare {
-    width: 100%;
-    height: 100%;
+    width: calc(var(--square-size) * 3);
+    height: calc(var(--square-size) * 3);
     border: var(--line-size) solid #fff;
     font-size: 6rem;
     box-sizing: border-box;
