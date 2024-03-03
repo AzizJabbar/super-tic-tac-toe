@@ -77,6 +77,7 @@
     font-weight: 800;
     font-size: 2rem;
     padding: 0.75rem;
+
     border-radius: 12px;
     text-align: center;
     width: 100%;
@@ -124,5 +125,15 @@
     letter-spacing: 0.5px;
     transition: opacity 0.5s ease-in-out;
     opacity: 0;
+  }
+
+  @media (max-width: 1200px) {
+    .title {
+      font-size: 2.5rem;
+    }
+    .start-button {
+      font-size: 1.75rem;
+      padding: 0.5rem;
+    }
   }
 </style>
