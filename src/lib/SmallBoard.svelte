@@ -40,7 +40,7 @@
 </script>
 
 <main>
-  {#if isWin}
+  {#if isWin === "X" || isWin == "O"}
     <div class="{isWin === 'O' ? 'winningSquare border-red' : ''} {isWin === 'X' ? 'winningSquare border-blue' : ''}">
       {#if isWin === "X"}
         <span class="x">
