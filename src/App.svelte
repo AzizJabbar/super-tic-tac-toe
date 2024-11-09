@@ -4,6 +4,10 @@
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
 
+  let selectMode = false;
+  let selectHost = false;
+  let enterId = false;
+
   function handleStartGame() {
     document.getElementById("menu").style.opacity = "0";
     isNewGame.set(true);
@@ -58,6 +62,26 @@
   <div class="game-container">
     <BigBoard />
     <div class="menu" id="menu">
+      {#if selectMode && !selectHost}
+        <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
+          Offline
+        </div>
+        <div on:click={() => selectHost = true} on:keydown={() => selectHost = true} class="start-button" role="button" tabindex="0">
+          Online
+        </div>
+      {:else if selectHost && !enterId}
+         <div on:click={() => enterId = true} on:keydown={() => enterId = true} class="start-button" role="button" tabindex="0">
+          Join a game
+        </div>
+        <div on:click={() => selectHost = true} on:keydown={() => selectHost = true} class="start-button" role="button" tabindex="0">
+          Host a new game
+        </div>
+      {:else if enterId}
+        <input type="text" placeholder="Enter game ID" />
+        <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
+          Join
+        </div>
+      {:else}
       <div class="title">
         {#if $isGameEnd && !$intervalId}
           {#if $isGameEnd === "Draw"}
@@ -69,13 +93,10 @@
           Super Tic Tac Toe
         {/if}
       </div>
-      <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
-        {#if $isGameEnd && !$intervalId}
-          Start a New Game
-        {:else}
+      <div on:click={() => selectMode = true} on:keydown={() => selectMode = true} class="start-button" role="button" tabindex="0">
           Play
-        {/if}
       </div>
+      {/if}
       <!-- <div class="other-button">How to play</div> -->
     </div>
   </div>
