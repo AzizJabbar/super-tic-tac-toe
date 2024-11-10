@@ -1,20 +1,39 @@
 <script>
   import BigBoard from "./lib/BigBoard.svelte";
-  import { turn, isNewGame, isGameEnd, isPlaying, intervalId } from "./store/store";
+  import { turn, isNewGame, isGameEnd, isPlaying, intervalId, gameRef } from "./store/store";
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
+  import { ref, onValue } from "firebase/database";
+  import { db } from "./firebase/firebase";
 
   let selectMode = false;
   let selectHost = false;
   let enterId = false;
 
   function handleStartGame() {
+    if(enterId){
+       gameRef.set(ref(db, `games/game${(document.getElementById("input-id")).value}`));
+    }
     document.getElementById("menu").style.opacity = "0";
     isNewGame.set(true);
     isPlaying.set(true);
     setTimeout(() => {
       intervalId.set(null);
     }, 1000);
+  }
+
+  function createRoom() {
+    const gameId = "game0001"; // Could be generated dynamically for each game
+    gameRef.set(ref(db, `games/${gameId}`));
+    console.log(gameRef);
+  }
+  $: if($gameRef){
+    onValue($gameRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      console.log(data);
+    }
+  });
   }
 
   function runDemo() {
@@ -73,11 +92,11 @@
          <div on:click={() => enterId = true} on:keydown={() => enterId = true} class="start-button" role="button" tabindex="0">
           Join a game
         </div>
-        <div on:click={() => selectHost = true} on:keydown={() => selectHost = true} class="start-button" role="button" tabindex="0">
+        <div on:click={createRoom} on:keydown={() => selectHost = true} class="start-button" role="button" tabindex="0">
           Host a new game
         </div>
       {:else if enterId}
-        <input type="text" placeholder="Enter game ID" />
+        <input id="input-id" type="text" placeholder="Enter game ID" />
         <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
           Join
         </div>

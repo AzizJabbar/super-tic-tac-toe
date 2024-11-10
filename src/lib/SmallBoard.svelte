@@ -1,10 +1,11 @@
 <script>
   import Square from "./Square.svelte";
-  import { turn, isNewGame } from "../store/store";
+  import { turn, isNewGame, gameRef } from "../store/store";
   import checkWin from "../utils/checkWin";
   import Fa from "svelte-fa";
   // @ts-ignore
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
+  import { set } from "firebase/database";
 
   export let handleSmallBoardWin;
   export let updateActiveBoard;
@@ -20,11 +21,17 @@
   }
 
   function handleSquareClick(i) {
+   
     boardStatus[i] = $turn;
     filledSquares++;
     isWin = checkWin(boardStatus);
     if (!isWin && filledSquares === 9) {
       isWin = "Draw"; // It's a draw if all filled and no winner
+    }
+     if($gameRef){
+      set($gameRef, {
+      smallBoardStatus: boardStatus,
+    });
     }
 
     if (isWin) {
