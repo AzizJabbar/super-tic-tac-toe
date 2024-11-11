@@ -31,8 +31,8 @@
     id={`square${i}`}
     on:mouseenter={handleMouseEnter}
     on:mouseleave={handleMouseLeave}
-    class:active={isActive && mark === null}
-    style={`pointer-events: ${!$intervalId && isActive && mark === null ? "auto" : "none"};`}
+    class:active={isActive && mark === false}
+    style={`pointer-events: ${!$intervalId && isActive && mark === false ? "auto" : "none"};`}
     class:noBorderUp={i === 0 || i === 1 || i === 2}
     class:noBorderRight={i === 2 || i === 5 || i === 8}
     class:noBorderLeft={i === 6 || i === 3 || i === 0}

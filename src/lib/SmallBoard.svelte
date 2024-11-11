@@ -16,7 +16,7 @@
   let filledSquares = 0;
 
   $: if ($isNewGame) {
-    smallBoardStatus.set(Array.from({ length: 9 }, () => Array(9).fill(null)));
+    smallBoardStatus.set(Array.from({ length: 9 }, () => Array(9).fill(false)));
     isWin = null;
     filledSquares = 0;
   }
@@ -33,7 +33,8 @@
     if (!isWin && filledSquares === 9) {
       isWin = "Draw"; // It's a draw if all filled and no winner
     }
-     if($gameRef){
+    console.log("smallboardstatus before send", $smallBoardStatus);
+    if($gameRef){
       set($gameRef, {
       smallBoardStatus: $smallBoardStatus,
     });

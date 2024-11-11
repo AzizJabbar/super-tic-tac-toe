@@ -5,6 +5,7 @@
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
   import { ref, onValue } from "firebase/database";
   import { db } from "./firebase/firebase";
+  import writer from "./store/writer";
 
   let selectMode = false;
   let selectHost = false;
@@ -23,20 +24,26 @@
   }
 
   function createRoom() {
-    const gameId = "game0001"; // Could be generated dynamically for each game
-    gameRef.set(ref(db, `games/${gameId}`));
+    const gameId = "0001"; // Could be generated dynamically for each game
+    gameRef.set(ref(db, `games/game${gameId}`));
     console.log(gameRef);
+    handleStartGame();
   }
   $: if($gameRef){
     onValue($gameRef, (snapshot) => {
     const data = snapshot.val();
     if (data) {
       console.log(data);
+      for (const [key, value] of Object.entries(data)) {
+        writer.write(key, value);
+      }
     }
   });
+
   }
 
   function runDemo() {
+    console.log("demo running")
     intervalId.set(
       setInterval(() => {
         let activeSquare = document.querySelectorAll(".active");

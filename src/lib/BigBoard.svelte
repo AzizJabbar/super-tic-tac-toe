@@ -32,7 +32,7 @@
   }
 
   $: if ($isNewGame) {
-    bigBoardStatus.set(Array(9).fill(null));
+    bigBoardStatus.set(Array(9).fill(false));
     setTimeout(() => {
       isGameEnd.set(null);
     }, 500);
@@ -50,7 +50,7 @@
   }
 
   function checkDraw() {
-    if ($bigBoardStatus.every((status) => status !== null) && !checkWin($bigBoardStatus)) {
+    if ($bigBoardStatus.every((status) => status !== false) && !checkWin($bigBoardStatus)) {
       isGameEnd.set("Draw"); // Overall draw
       isPlaying.set(false);
     }
@@ -58,7 +58,7 @@
 
   function updateActiveBoard(i) {
     if ($bigBoardStatus[i]) {
-      isActive = $bigBoardStatus.map((e) => e === null);
+      isActive = $bigBoardStatus.map((e) => e === false);
     } else {
       isActive = Array(9).fill(false);
       isActive[i] = true;
