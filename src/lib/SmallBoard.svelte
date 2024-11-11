@@ -1,6 +1,6 @@
 <script>
   import Square from "./Square.svelte";
-  import { turn, isNewGame, gameRef } from "../store/store";
+  import { turn, isNewGame, gameRef, smallBoardStatus } from "../store/store";
   import checkWin from "../utils/checkWin";
   import Fa from "svelte-fa";
   // @ts-ignore
@@ -10,27 +10,32 @@
   export let handleSmallBoardWin;
   export let updateActiveBoard;
   export let isActive;
-  let boardStatus = Array(9).fill(null);
+  export let index;
+  // let boardStatus = Array(9).fill(null);
   let isWin = null;
   let filledSquares = 0;
 
   $: if ($isNewGame) {
-    boardStatus = Array(9).fill(null);
+    smallBoardStatus.set(Array.from({ length: 9 }, () => Array(9).fill(null)));
     isWin = null;
     filledSquares = 0;
   }
 
   function handleSquareClick(i) {
-   
-    boardStatus[i] = $turn;
+    smallBoardStatus.update((value) => {
+      console.log(value);
+      console.log(index);
+      value[index][i] = $turn;
+      return value;
+    });
     filledSquares++;
-    isWin = checkWin(boardStatus);
+    isWin = checkWin($smallBoardStatus[index]);
     if (!isWin && filledSquares === 9) {
       isWin = "Draw"; // It's a draw if all filled and no winner
     }
      if($gameRef){
       set($gameRef, {
-      smallBoardStatus: boardStatus,
+      smallBoardStatus: $smallBoardStatus,
     });
     }
 
@@ -61,8 +66,8 @@
     </div>
   {:else}
     <div class="smallBoard">
-      {#each boardStatus as item, i}
-        <Square {i} {isActive} handleSquareClick={() => handleSquareClick(i)} mark={boardStatus[i]} />
+      {#each $smallBoardStatus[index] as item, i}
+        <Square {i} {isActive} handleSquareClick={() => handleSquareClick(i)} mark={$smallBoardStatus[index][i]} />
       {/each}
     </div>
   {/if}

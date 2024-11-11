@@ -73,6 +73,7 @@
         updateActiveBoard={(i) => updateActiveBoard(i)}
         handleSmallBoardWin={(winner) => handleSmallBoardWin(i, winner)}
         isActive={isActive[i]}
+        index={i}
       />
     {/each}
   </div>
