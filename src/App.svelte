@@ -1,39 +1,54 @@
 <script>
   import BigBoard from "./lib/BigBoard.svelte";
-  import { turn, isNewGame, isGameEnd, isPlaying, intervalId, gameRef } from "./store/store";
+  import { turn, isNewGame, isGameEnd, isPlaying, intervalId, gameRef, currentPlayer } from "./store/store";
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
-  import { ref, onValue } from "firebase/database";
+  import { ref, onValue, set } from "firebase/database";
   import { db } from "./firebase/firebase";
   import writer from "./store/writer";
 
   let selectMode = false;
   let selectHost = false;
   let enterId = false;
+  let waiting = false;
+  let gameId = null;
 
   function handleStartGame() {
     if(enterId){
        gameRef.set(ref(db, `games/game${(document.getElementById("input-id")).value}`));
+       currentPlayer.set(Math.random() > 0.5 ? "X" : "O");
+       set($gameRef, {
+        player2: $currentPlayer,
+        turn: "X",
+      });
     }
     document.getElementById("menu").style.opacity = "0";
     isNewGame.set(true);
     isPlaying.set(true);
+    enterId = false;
+    waiting = false;
     setTimeout(() => {
       intervalId.set(null);
     }, 1000);
   }
 
   function createRoom() {
-    const gameId = "0001"; // Could be generated dynamically for each game
+    gameId = "0001"; // Could be generated dynamically for each game
     gameRef.set(ref(db, `games/game${gameId}`));
     console.log(gameRef);
-    handleStartGame();
+    waiting = true;
+    // handleStartGame();
   }
   $: if($gameRef){
     onValue($gameRef, (snapshot) => {
     const data = snapshot.val();
     if (data) {
       console.log(data);
+      if(data.player2 && waiting){
+        waiting = false;
+        currentPlayer.set(data.player2 === "X" ? "O" : "X");
+        handleStartGame();
+      }
       for (const [key, value] of Object.entries(data)) {
         writer.write(key, value);
       }
@@ -88,6 +103,16 @@
   <div class="game-container">
     <BigBoard />
     <div class="menu" id="menu">
+      {#if waiting}
+        <div>
+          Waiting for opponent
+        </div>
+        {#if gameId}
+        <div>
+          Game ID: {gameId}
+        </div>
+        {/if}
+      {:else}
       {#if selectMode && !selectHost}
         <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
           Offline
@@ -122,6 +147,7 @@
       <div on:click={() => selectMode = true} on:keydown={() => selectMode = true} class="start-button" role="button" tabindex="0">
           Play
       </div>
+      {/if}
       {/if}
       <!-- <div class="other-button">How to play</div> -->
     </div>

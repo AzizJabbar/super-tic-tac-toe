@@ -1,6 +1,6 @@
 <script>
   import SmallBoard from "./SmallBoard.svelte";
-  import { bigBoardStatus, isGameEnd, isNewGame, isPlaying } from "../store/store";
+  import { bigBoardStatus, isGameEnd, isNewGame, isPlaying, currentPlayer, turn } from "../store/store";
   import checkWin from "../utils/checkWin";
   import { slide } from "svelte/transition";
   import { flip } from "svelte/animate";

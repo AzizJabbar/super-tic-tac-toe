@@ -1,11 +1,11 @@
 <script>
   import Square from "./Square.svelte";
-  import { turn, isNewGame, gameRef, smallBoardStatus } from "../store/store";
+  import { turn, isNewGame, gameRef, smallBoardStatus, lastMove } from "../store/store";
   import checkWin from "../utils/checkWin";
   import Fa from "svelte-fa";
   // @ts-ignore
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
-  import { set } from "firebase/database";
+  import { set, update } from "firebase/database";
 
   export let handleSmallBoardWin;
   export let updateActiveBoard;
@@ -21,6 +21,10 @@
     filledSquares = 0;
   }
 
+  $: if ($lastMove){
+    updateActiveBoard($lastMove[1]);
+  }
+
   function handleSquareClick(i) {
     smallBoardStatus.update((value) => {
       console.log(value);
@@ -34,11 +38,7 @@
       isWin = "Draw"; // It's a draw if all filled and no winner
     }
     console.log("smallboardstatus before send", $smallBoardStatus);
-    if($gameRef){
-      set($gameRef, {
-      smallBoardStatus: $smallBoardStatus,
-    });
-    }
+    
 
     if (isWin) {
       handleSmallBoardWin(isWin);
@@ -49,6 +49,13 @@
     }
 
     turn.set($turn === "X" ? "O" : "X");
+    if($gameRef){
+      set($gameRef, {
+      smallBoardStatus: $smallBoardStatus,
+      turn: $turn,
+      lastMove: [index, i],
+    });
+    }
   }
 </script>
 

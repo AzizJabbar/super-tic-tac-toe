@@ -6,6 +6,7 @@ import {
   isNewGame,
   isPlaying,
   intervalId,
+  lastMove,
   gameRef,
 } from "./store.js";
 
@@ -18,6 +19,7 @@ const writer = () => {
     isNewGame,
     isPlaying,
     intervalId,
+    lastMove,
     gameRef,
   };
 

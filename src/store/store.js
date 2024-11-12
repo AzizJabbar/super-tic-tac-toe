@@ -9,6 +9,8 @@ const smallBoardStatus = writable(
   Array.from({ length: 9 }, () => Array(9).fill(false))
 );
 const intervalId = writable(null);
+const currentPlayer = writable(null);
+const lastMove = writable(null);
 const gameRef = writable(null);
 
 export {
@@ -19,5 +21,7 @@ export {
   isNewGame,
   isPlaying,
   intervalId,
+  currentPlayer,
+  lastMove,
   gameRef,
 };
