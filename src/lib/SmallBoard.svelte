@@ -5,7 +5,7 @@
   import Fa from "svelte-fa";
   // @ts-ignore
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
-  import { set, update } from "firebase/database";
+  import { onValue, set, update } from "firebase/database";
 
   export let handleSmallBoardWin;
   export let updateActiveBoard;
@@ -25,6 +25,29 @@
     updateActiveBoard($lastMove[1]);
   }
 
+$: if($gameRef){
+    onValue($gameRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data?.lastMove?.[0] === index ) {
+      filledSquares++;
+      console.log("chuyy");
+    isWin = checkWin($smallBoardStatus[index]);
+    console.log("isWin", isWin);
+    if (!isWin && filledSquares === 9) {
+      isWin = "Draw"; // It's a draw if all filled and no winner
+    }
+    
+
+    if (isWin && isWin !== "Draw") {
+      handleSmallBoardWin(isWin);
+    }
+    if ($isNewGame) {
+      isNewGame.set(false);
+    }
+    }
+  });
+
+  }
   function handleSquareClick(i) {
     smallBoardStatus.update((value) => {
       console.log(value);

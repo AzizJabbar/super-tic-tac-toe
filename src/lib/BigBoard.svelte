@@ -58,6 +58,7 @@
 
   function updateActiveBoard(i) {
     if ($bigBoardStatus[i]) {
+      console.log("bigborrd status", $bigBoardStatus);
       isActive = $bigBoardStatus.map((e) => e === false);
     } else {
       isActive = Array(9).fill(false);
