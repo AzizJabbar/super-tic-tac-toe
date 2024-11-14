@@ -3,7 +3,7 @@
   import { turn, isNewGame, isGameEnd, isPlaying, intervalId, gameRef, currentPlayer } from "./store/store";
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
-  import { ref, onValue, set } from "firebase/database";
+  import { ref, onValue, set, off } from "firebase/database";
   import { db } from "./firebase/firebase";
   import writer from "./store/writer";
 
@@ -110,6 +110,15 @@
         {#if gameId}
         <div>
           Game ID: {gameId}
+        </div>
+        <div on:click={() => {
+          off($gameRef);
+          waiting = false;
+        }} on:keydown={() => {
+          off($gameRef);
+          waiting = false;
+        }} class="other-button" role="button" tabindex="0">
+          Cancel
         </div>
         {/if}
       {:else}
