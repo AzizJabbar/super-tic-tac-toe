@@ -120,6 +120,9 @@
         <div on:click={() => selectHost = true} on:keydown={() => selectHost = true} class="start-button" role="button" tabindex="0">
           Online
         </div>
+        <div on:click={() => selectMode = false} on:keydown={() => selectMode = false} class="other-button" role="button" tabindex="0">
+          Back
+        </div>
       {:else if selectHost && !enterId}
          <div on:click={() => enterId = true} on:keydown={() => enterId = true} class="start-button" role="button" tabindex="0">
           Join a game
@@ -127,10 +130,16 @@
         <div on:click={createRoom} on:keydown={() => selectHost = true} class="start-button" role="button" tabindex="0">
           Host a new game
         </div>
+        <div on:click={() => selectHost = false} on:keydown={() => selectHost = false} class="other-button" role="button" tabindex="0">
+          Back
+        </div>
       {:else if enterId}
-        <input id="input-id" type="text" placeholder="Enter game ID" />
+        <input id="input-id" class="styled-input" type="text" placeholder="Enter game ID" />
         <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
           Join
+        </div>
+        <div on:click={() => enterId = false} on:keydown={() => enterId = false} class="other-button" role="button" tabindex="0">
+          Back
         </div>
       {:else}
       <div class="title">
@@ -177,6 +186,19 @@
     border-radius: 12px;
     text-align: center;
     width: 100%;
+    min-width: 460px;
+  }
+  .styled-input {
+    border: none; /* Removes all borders */
+    border-bottom: 2px solid var(--orange); /* Adds a bottom border */
+    background-color: transparent; /* Makes background transparent */
+    font-size: 32px; /* Sets font size */
+    padding: 5px; /* Adds some padding (optional) */
+    outline: none; /* Removes the outline on focus */
+    width: 100%; /* Optional: set desired width */
+    color:var(--light-gray);
+    text-align: center;
+    letter-spacing: 1.5px;
   }
   .menu {
     display: flex;
@@ -205,7 +227,7 @@
   }
 
   .other-button {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.2);
     width: 100%;
     color: var(--light-gray);
     cursor: pointer;

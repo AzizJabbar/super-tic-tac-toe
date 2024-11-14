@@ -2,8 +2,6 @@
   import SmallBoard from "./SmallBoard.svelte";
   import { bigBoardStatus, isGameEnd, isNewGame, isPlaying, currentPlayer, turn } from "../store/store";
   import checkWin from "../utils/checkWin";
-  import { slide } from "svelte/transition";
-  import { flip } from "svelte/animate";
 
   let isActive = Array(9).fill(true);
 
