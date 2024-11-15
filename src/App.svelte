@@ -113,6 +113,15 @@
   <div class="game-container">
     <BigBoard />
     <div class="menu" id="menu">
+      {#if $isGameEnd && !$intervalId}
+        {#if $isGameEnd === "Draw"}
+          <div class="title">Game is draw</div>
+        {:else}
+          <div class="title">
+            {$isGameEnd} is the winner
+          </div>
+        {/if}
+      {/if}
       {#if waiting}
         <div>Waiting for opponent</div>
         {#if gameId}
@@ -217,17 +226,7 @@
           Back
         </div>
       {:else}
-        <div class="title">
-          {#if $isGameEnd && !$intervalId}
-            {#if $isGameEnd === "Draw"}
-              Game is draw
-            {:else}
-              {$isGameEnd} is the winner
-            {/if}
-          {:else}
-            Super Tic Tac Toe
-          {/if}
-        </div>
+        <div class="title">Super Tic Tac Toe</div>
         <div
           on:click={() => (selectMode = true)}
           on:keydown={() => (selectMode = true)}
