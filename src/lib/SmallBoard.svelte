@@ -63,7 +63,7 @@ $: if($gameRef){
     console.log("smallboardstatus before send", $smallBoardStatus);
     
 
-    if (isWin) {
+    if (isWin && isWin !== "Draw") {
       handleSmallBoardWin(isWin);
     }
     updateActiveBoard(i);
