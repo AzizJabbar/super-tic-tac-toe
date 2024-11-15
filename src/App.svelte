@@ -1,6 +1,14 @@
 <script>
   import BigBoard from "./lib/BigBoard.svelte";
-  import { turn, isNewGame, isGameEnd, isPlaying, intervalId, gameRef, currentPlayer } from "./store/store";
+  import {
+    turn,
+    isNewGame,
+    isGameEnd,
+    isPlaying,
+    intervalId,
+    gameRef,
+    currentPlayer,
+  } from "./store/store";
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
   import { ref, onValue, set, off } from "firebase/database";
@@ -14,10 +22,12 @@
   let gameId = null;
 
   function handleStartGame() {
-    if(enterId){
-       gameRef.set(ref(db, `games/game${(document.getElementById("input-id")).value}`));
-       currentPlayer.set(Math.random() > 0.5 ? "X" : "O");
-       set($gameRef, {
+    if (enterId) {
+      gameRef.set(
+        ref(db, `games/game${document.getElementById("input-id").value}`)
+      );
+      currentPlayer.set(Math.random() > 0.5 ? "X" : "O");
+      set($gameRef, {
         player2: $currentPlayer,
         turn: "X",
       });
@@ -39,31 +49,31 @@
     waiting = true;
     // handleStartGame();
   }
-  $: if($gameRef){
+  $: if ($gameRef) {
     onValue($gameRef, (snapshot) => {
-    const data = snapshot.val();
-    if (data) {
-      console.log(data);
-      if(data.player2 && waiting){
-        waiting = false;
-        currentPlayer.set(data.player2 === "X" ? "O" : "X");
-        handleStartGame();
+      const data = snapshot.val();
+      if (data) {
+        console.log(data);
+        if (data.player2 && waiting) {
+          waiting = false;
+          currentPlayer.set(data.player2 === "X" ? "O" : "X");
+          handleStartGame();
+        }
+        for (const [key, value] of Object.entries(data)) {
+          writer.write(key, value);
+        }
       }
-      for (const [key, value] of Object.entries(data)) {
-        writer.write(key, value);
-      }
-    }
-  });
-
+    });
   }
 
   function runDemo() {
-    console.log("demo running")
+    console.log("demo running");
     intervalId.set(
       setInterval(() => {
         let activeSquare = document.querySelectorAll(".active");
         if ($isPlaying || !activeSquare.length) return;
-        let randomSquare = activeSquare[Math.floor(Math.random() * activeSquare.length)];
+        let randomSquare =
+          activeSquare[Math.floor(Math.random() * activeSquare.length)];
         // @ts-ignore
         randomSquare.click();
       }, 1500)
@@ -104,68 +114,129 @@
     <BigBoard />
     <div class="menu" id="menu">
       {#if waiting}
-        <div>
-          Waiting for opponent
-        </div>
+        <div>Waiting for opponent</div>
         {#if gameId}
-        <div>
-          Game ID: {gameId}
-        </div>
-        <div on:click={() => {
-          off($gameRef);
-          waiting = false;
-        }} on:keydown={() => {
-          off($gameRef);
-          waiting = false;
-        }} class="other-button" role="button" tabindex="0">
-          Cancel
-        </div>
+          <div>
+            Game ID: {gameId}
+          </div>
+          <div
+            on:click={() => {
+              off($gameRef);
+              waiting = false;
+            }}
+            on:keydown={() => {
+              off($gameRef);
+              waiting = false;
+            }}
+            class="other-button"
+            role="button"
+            tabindex="0"
+          >
+            Cancel
+          </div>
         {/if}
-      {:else}
-      {#if selectMode && !selectHost}
-        <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
+      {:else if selectMode && !selectHost}
+        <div
+          on:click={handleStartGame}
+          on:keydown={handleStartGame}
+          class="start-button"
+          role="button"
+          tabindex="0"
+        >
           Offline
         </div>
-        <div on:click={() => selectHost = true} on:keydown={() => selectHost = true} class="start-button" role="button" tabindex="0">
+        <div
+          on:click={() => (selectHost = true)}
+          on:keydown={() => (selectHost = true)}
+          class="start-button"
+          role="button"
+          tabindex="0"
+        >
           Online
         </div>
-        <div on:click={() => selectMode = false} on:keydown={() => selectMode = false} class="other-button" role="button" tabindex="0">
+        <div
+          on:click={() => (selectMode = false)}
+          on:keydown={() => (selectMode = false)}
+          class="other-button"
+          role="button"
+          tabindex="0"
+        >
           Back
         </div>
       {:else if selectHost && !enterId}
-         <div on:click={() => enterId = true} on:keydown={() => enterId = true} class="start-button" role="button" tabindex="0">
+        <div
+          on:click={() => (enterId = true)}
+          on:keydown={() => (enterId = true)}
+          class="start-button"
+          role="button"
+          tabindex="0"
+        >
           Join a game
         </div>
-        <div on:click={createRoom} on:keydown={() => selectHost = true} class="start-button" role="button" tabindex="0">
+        <div
+          on:click={createRoom}
+          on:keydown={() => (selectHost = true)}
+          class="start-button"
+          role="button"
+          tabindex="0"
+        >
           Host a new game
         </div>
-        <div on:click={() => selectHost = false} on:keydown={() => selectHost = false} class="other-button" role="button" tabindex="0">
+        <div
+          on:click={() => (selectHost = false)}
+          on:keydown={() => (selectHost = false)}
+          class="other-button"
+          role="button"
+          tabindex="0"
+        >
           Back
         </div>
       {:else if enterId}
-        <input id="input-id" class="styled-input" type="text" placeholder="Enter game ID" />
-        <div on:click={handleStartGame} on:keydown={handleStartGame} class="start-button" role="button" tabindex="0">
+        <input
+          id="input-id"
+          class="styled-input"
+          type="text"
+          placeholder="Enter game ID"
+        />
+        <div
+          on:click={handleStartGame}
+          on:keydown={handleStartGame}
+          class="start-button"
+          role="button"
+          tabindex="0"
+        >
           Join
         </div>
-        <div on:click={() => enterId = false} on:keydown={() => enterId = false} class="other-button" role="button" tabindex="0">
+        <div
+          on:click={() => (enterId = false)}
+          on:keydown={() => (enterId = false)}
+          class="other-button"
+          role="button"
+          tabindex="0"
+        >
           Back
         </div>
       {:else}
-      <div class="title">
-        {#if $isGameEnd && !$intervalId}
-          {#if $isGameEnd === "Draw"}
-            Game is draw
+        <div class="title">
+          {#if $isGameEnd && !$intervalId}
+            {#if $isGameEnd === "Draw"}
+              Game is draw
+            {:else}
+              {$isGameEnd} is the winner
+            {/if}
           {:else}
-            {$isGameEnd} is the winner
+            Super Tic Tac Toe
           {/if}
-        {:else}
-          Super Tic Tac Toe
-        {/if}
-      </div>
-      <div on:click={() => selectMode = true} on:keydown={() => selectMode = true} class="start-button" role="button" tabindex="0">
+        </div>
+        <div
+          on:click={() => (selectMode = true)}
+          on:keydown={() => (selectMode = true)}
+          class="start-button"
+          role="button"
+          tabindex="0"
+        >
           Play
-      </div>
-      {/if}
+        </div>
       {/if}
       <!-- <div class="other-button">How to play</div> -->
     </div>
@@ -205,7 +276,7 @@
     padding: 5px; /* Adds some padding (optional) */
     outline: none; /* Removes the outline on focus */
     width: 100%; /* Optional: set desired width */
-    color:var(--light-gray);
+    color: var(--light-gray);
     text-align: center;
     letter-spacing: 1.5px;
   }

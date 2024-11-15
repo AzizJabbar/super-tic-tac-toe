@@ -1,6 +1,13 @@
 <script>
   import SmallBoard from "./SmallBoard.svelte";
-  import { bigBoardStatus, isGameEnd, isNewGame, isPlaying, currentPlayer, turn } from "../store/store";
+  import {
+    bigBoardStatus,
+    isGameEnd,
+    isNewGame,
+    isPlaying,
+    currentPlayer,
+    turn,
+  } from "../store/store";
   import checkWin from "../utils/checkWin";
 
   let isActive = Array(9).fill(true);
@@ -48,7 +55,10 @@
   }
 
   function checkDraw() {
-    if ($bigBoardStatus.every((status) => status !== false) && !checkWin($bigBoardStatus)) {
+    if (
+      $bigBoardStatus.every((status) => status !== false) &&
+      !checkWin($bigBoardStatus)
+    ) {
       isGameEnd.set("Draw"); // Overall draw
       isPlaying.set(false);
     }

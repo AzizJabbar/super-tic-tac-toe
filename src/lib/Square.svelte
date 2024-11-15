@@ -31,7 +31,9 @@
     id={`square${i}`}
     on:mouseenter={handleMouseEnter}
     on:mouseleave={handleMouseLeave}
-    class:active={isActive && mark === false && (!$currentPlayer || $currentPlayer === $turn)}
+    class:active={isActive &&
+      mark === false &&
+      (!$currentPlayer || $currentPlayer === $turn)}
     style={`pointer-events: ${!$intervalId && isActive && mark === false ? "auto" : "none"};`}
     class:noBorderUp={i === 0 || i === 1 || i === 2}
     class:noBorderRight={i === 2 || i === 5 || i === 8}

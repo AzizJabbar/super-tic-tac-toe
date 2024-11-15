@@ -1,6 +1,12 @@
 <script>
   import Square from "./Square.svelte";
-  import { turn, isNewGame, gameRef, smallBoardStatus, lastMove } from "../store/store";
+  import {
+    turn,
+    isNewGame,
+    gameRef,
+    smallBoardStatus,
+    lastMove,
+  } from "../store/store";
   import checkWin from "../utils/checkWin";
   import Fa from "svelte-fa";
   // @ts-ignore
@@ -21,32 +27,30 @@
     filledSquares = 0;
   }
 
-  $: if ($lastMove){
+  $: if ($lastMove) {
     updateActiveBoard($lastMove[1]);
   }
 
-$: if($gameRef){
+  $: if ($gameRef) {
     onValue($gameRef, (snapshot) => {
-    const data = snapshot.val();
-    if (data?.lastMove?.[0] === index ) {
-      filledSquares++;
-      console.log("chuyy");
-    isWin = checkWin($smallBoardStatus[index]);
-    console.log("isWin", isWin);
-    if (!isWin && filledSquares === 9) {
-      isWin = "Draw"; // It's a draw if all filled and no winner
-    }
-    
+      const data = snapshot.val();
+      if (data?.lastMove?.[0] === index) {
+        filledSquares++;
+        console.log("chuyy");
+        isWin = checkWin($smallBoardStatus[index]);
+        console.log("isWin", isWin);
+        if (!isWin && filledSquares === 9) {
+          isWin = "Draw"; // It's a draw if all filled and no winner
+        }
 
-    if (isWin && isWin !== "Draw") {
-      handleSmallBoardWin(isWin);
-    }
-    if ($isNewGame) {
-      isNewGame.set(false);
-    }
-    }
-  });
-
+        if (isWin && isWin !== "Draw") {
+          handleSmallBoardWin(isWin);
+        }
+        if ($isNewGame) {
+          isNewGame.set(false);
+        }
+      }
+    });
   }
   function handleSquareClick(i) {
     smallBoardStatus.update((value) => {
@@ -61,7 +65,6 @@ $: if($gameRef){
       isWin = "Draw"; // It's a draw if all filled and no winner
     }
     console.log("smallboardstatus before send", $smallBoardStatus);
-    
 
     if (isWin && isWin !== "Draw") {
       handleSmallBoardWin(isWin);
@@ -72,19 +75,23 @@ $: if($gameRef){
     }
 
     turn.set($turn === "X" ? "O" : "X");
-    if($gameRef){
+    if ($gameRef) {
       set($gameRef, {
-      smallBoardStatus: $smallBoardStatus,
-      turn: $turn,
-      lastMove: [index, i],
-    });
+        smallBoardStatus: $smallBoardStatus,
+        turn: $turn,
+        lastMove: [index, i],
+      });
     }
   }
 </script>
 
 <main>
   {#if isWin === "X" || isWin == "O"}
-    <div class="{isWin === 'O' ? 'winningSquare border-red' : ''} {isWin === 'X' ? 'winningSquare border-blue' : ''}">
+    <div
+      class="{isWin === 'O' ? 'winningSquare border-red' : ''} {isWin === 'X'
+        ? 'winningSquare border-blue'
+        : ''}"
+    >
       {#if isWin === "X"}
         <span class="x">
           <Fa icon={faX} />
@@ -98,7 +105,12 @@ $: if($gameRef){
   {:else}
     <div class="smallBoard">
       {#each $smallBoardStatus[index] as item, i}
-        <Square {i} {isActive} handleSquareClick={() => handleSquareClick(i)} mark={$smallBoardStatus[index][i]} />
+        <Square
+          {i}
+          {isActive}
+          handleSquareClick={() => handleSquareClick(i)}
+          mark={$smallBoardStatus[index][i]}
+        />
       {/each}
     </div>
   {/if}
