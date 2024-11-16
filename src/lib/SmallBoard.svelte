@@ -6,6 +6,7 @@
     gameRef,
     smallBoardStatus,
     lastMove,
+    intervalId,
   } from "../store/store";
   import checkWin from "../utils/checkWin";
   import Fa from "svelte-fa";
@@ -75,7 +76,7 @@
     }
 
     turn.set($turn === "X" ? "O" : "X");
-    if ($gameRef) {
+    if ($gameRef && !$intervalId) {
       set($gameRef, {
         smallBoardStatus: $smallBoardStatus,
         turn: $turn,

@@ -56,6 +56,9 @@ async function deleteGame() {
     gameRef.set(ref(db, `games/game${gameId}`));
     console.log(gameRef);
     waiting = true;
+    set($gameRef, {
+        player1: "on",
+      });
     // handleStartGame();
   }
   $: if ($gameRef) {
@@ -66,6 +69,9 @@ async function deleteGame() {
         if (data.player2 && waiting) {
           waiting = false;
           currentPlayer.set(data.player2 === "X" ? "O" : "X");
+          set($gameRef, {
+            player1: $currentPlayer,
+          });
           handleStartGame();
         }
         for (const [key, value] of Object.entries(data)) {
