@@ -145,7 +145,7 @@
       {#if waiting}
         <div>Waiting for opponent</div>
         {#if gameId}
-          <div>
+          <div class="title">
             Game ID: {gameId}
           </div>
           <div
@@ -301,7 +301,9 @@
     width: 100%; /* Optional: set desired width */
     color: var(--light-gray);
     text-align: center;
-    letter-spacing: 1.5px;
+    /* letter-spacing: 1.5px; */
+    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
   }
   .menu {
     display: flex;
