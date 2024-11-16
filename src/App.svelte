@@ -11,7 +11,7 @@
   } from "./store/store";
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
-  import { ref, onValue, set, off } from "firebase/database";
+  import { ref, onValue, set, off, remove } from "firebase/database";
   import { db } from "./firebase/firebase";
   import writer from "./store/writer";
 
@@ -41,6 +41,15 @@
       intervalId.set(null);
     }, 1000);
   }
+
+async function deleteGame() {
+  try {
+    await remove($gameRef);
+    console.log('Game deleted successfully');
+  } catch (error) {
+    console.error('Error deleting game:', error);
+  }
+}
 
   function createRoom() {
     gameId = "0001"; // Could be generated dynamically for each game
@@ -132,10 +141,14 @@
             on:click={() => {
               off($gameRef);
               waiting = false;
+              deleteGame();
+              gameRef.set(null);
             }}
             on:keydown={() => {
               off($gameRef);
               waiting = false;
+              deleteGame();
+              gameRef.set(null);
             }}
             class="other-button"
             role="button"
