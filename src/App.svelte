@@ -42,23 +42,28 @@
     }, 1000);
   }
 
-async function deleteGame() {
-  try {
-    await remove($gameRef);
-    console.log('Game deleted successfully');
-  } catch (error) {
-    console.error('Error deleting game:', error);
+  async function deleteGame() {
+    try {
+      await remove($gameRef);
+      console.log("Game deleted successfully");
+    } catch (error) {
+      console.error("Error deleting game:", error);
+    }
   }
-}
+
+  function generateRandom4DigitString() {
+    const randomNum = Math.floor(Math.random() * 10000); // Generates a number between 0 and 9999
+    return randomNum.toString().padStart(4, "0"); // Pads with leading zeros if necessary
+  }
 
   function createRoom() {
-    gameId = "0001"; // Could be generated dynamically for each game
+    gameId = generateRandom4DigitString();
     gameRef.set(ref(db, `games/game${gameId}`));
     console.log(gameRef);
     waiting = true;
     set($gameRef, {
-        player1: "on",
-      });
+      player1: "on",
+    });
     // handleStartGame();
   }
   $: if ($gameRef) {
