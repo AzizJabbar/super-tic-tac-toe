@@ -108,6 +108,7 @@
       {#each $smallBoardStatus[index] as item, i}
         <Square
           {i}
+          {index}
           {isActive}
           handleSquareClick={() => handleSquareClick(i)}
           mark={$smallBoardStatus[index][i]}

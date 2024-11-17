@@ -1,13 +1,14 @@
 <script>
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
-  import { currentPlayer, turn } from "../store/store";
+  import { currentPlayer, turn, lastMove } from "../store/store";
   import { intervalId } from "../store/store";
   export let mark;
 
   export let handleSquareClick;
   export let isActive;
   export let i;
+  export let index;
 
   let isMouseOver = false;
   let childComponent;
@@ -51,11 +52,11 @@
       </span>
     {/if}
     {#if mark === "X"}
-      <span class="x">
+      <span class="x" style={$lastMove && $currentPlayer === $turn && index === $lastMove[0] && i === $lastMove[1] ? "filter: drop-shadow(0 0 7px var(--white))" : null}>
         <Fa icon={faX} />
       </span>
     {:else if mark === "O"}
-      <span class="o">
+      <span class="o" style={$lastMove && $currentPlayer === $turn && index === $lastMove[0] && i === $lastMove[1] ? "filter: drop-shadow(0 0 6px var(--white))" : null}>
         <Fa icon={faO} />
       </span>
     {/if}
