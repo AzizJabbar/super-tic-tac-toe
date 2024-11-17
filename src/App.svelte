@@ -14,6 +14,7 @@
   import { ref, onValue, set, off, remove } from "firebase/database";
   import { db } from "./firebase/firebase";
   import writer from "./store/writer";
+  import { onMount } from "svelte";
 
   let selectMode = false;
   let selectHost = false;
@@ -41,6 +42,19 @@
       intervalId.set(null);
     }, 1000);
   }
+
+  let waitingText = 'Waiting for opponent';
+  let dotCount = 0;
+
+  onMount(() => {
+    const interval = setInterval(() => {
+      dotCount = (dotCount % 3) + 1; // Cycle dotCount from 1 to 3
+      waitingText = 'Waiting for opponent' + '.'.repeat(dotCount);
+    }, 500);
+
+    // Cleanup interval when the component is destroyed
+    return () => clearInterval(interval);
+  });
 
   async function deleteGame() {
     try {
@@ -129,6 +143,13 @@
     {:else if $turn === "O"}
       <Fa icon={faO} />
     {/if}
+    {#if $currentPlayer}
+      {#if $currentPlayer !== $turn}
+      <div class="waiting-text">
+      {waitingText}
+      </div>
+      {/if}
+    {/if}
   </div>
   <div class="game-container">
     <BigBoard />
@@ -143,7 +164,7 @@
         {/if}
       {/if}
       {#if waiting}
-        <div>Waiting for opponent</div>
+        <div>{waitingText}</div>
         {#if gameId}
           <div class="title">
             Game ID: {gameId}
@@ -359,6 +380,14 @@
     letter-spacing: 0.5px;
     transition: opacity 0.5s ease-in-out;
     opacity: 0;
+    text-align: center;
+  }
+
+  .waiting-text {
+    font-size: 1rem;
+    color: var(--light-gray);
+    font-weight: 500;
+    letter-spacing: 0.5px;
   }
 
   @media (max-width: 1200px) {
