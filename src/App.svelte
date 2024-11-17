@@ -124,7 +124,11 @@
     document.getElementById("menu").style.opacity = "1";
     document.getElementById("menu").style.pointerEvents = "auto";
     document.getElementById("turn").style.opacity = "0";
-    
+    if($gameRef){
+      off($gameRef);
+      deleteGame();
+      gameRef.set(null);
+    }
   }
 
   $: if ($isPlaying) {
