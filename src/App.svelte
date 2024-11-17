@@ -38,18 +38,20 @@
     isPlaying.set(true);
     enterId = false;
     waiting = false;
+    selectMode = false;
+    selectHost = false;
     setTimeout(() => {
       intervalId.set(null);
     }, 1000);
   }
 
-  let waitingText = 'Waiting for opponent';
+  let waitingText = "Waiting for opponent";
   let dotCount = 0;
 
   onMount(() => {
     const interval = setInterval(() => {
       dotCount = (dotCount % 3) + 1; // Cycle dotCount from 1 to 3
-      waitingText = 'Waiting for opponent' + '.'.repeat(dotCount);
+      waitingText = "Waiting for opponent" + ".".repeat(dotCount);
     }, 500);
 
     // Cleanup interval when the component is destroyed
@@ -145,9 +147,9 @@
     {/if}
     {#if $currentPlayer}
       {#if $currentPlayer !== $turn}
-      <div class="waiting-text">
-      {waitingText}
-      </div>
+        <div class="waiting-text">
+          {waitingText}
+        </div>
       {/if}
     {/if}
   </div>
@@ -270,7 +272,7 @@
         >
           Back
         </div>
-      {:else}
+      {:else if !$isGameEnd}
         <div class="title">Super Tic Tac Toe</div>
         <div
           on:click={() => (selectMode = true)}
@@ -280,6 +282,16 @@
           tabindex="0"
         >
           Play
+        </div>
+      {:else}
+        <div
+          on:click={() => isGameEnd.set(false)}
+          on:keydown={() => isGameEnd.set(false)}
+          class="other-button"
+          role="button"
+          tabindex="0"
+        >
+          Back to Home
         </div>
       {/if}
       <!-- <div class="other-button">How to play</div> -->
