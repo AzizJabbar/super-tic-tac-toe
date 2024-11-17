@@ -139,6 +139,10 @@
   }
   $: if ($isGameEnd) {
     document.getElementById("turn").style.opacity = "0";
+    if($intervalId){
+      clearInterval($intervalId);
+      isGameEnd.set(null);
+    }
   }
 </script>
 
