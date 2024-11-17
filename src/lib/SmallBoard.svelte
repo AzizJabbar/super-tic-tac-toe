@@ -40,13 +40,15 @@
         console.log("chuyy");
         isWin = checkWin($smallBoardStatus[index]);
         console.log("isWin", isWin);
-        if (!isWin && filledSquares === 9) {
+        console.log('filledSquares', filledSquares);
+        if (!isWin && $smallBoardStatus[index].every((item) => item !== false)) {
           isWin = "Draw"; // It's a draw if all filled and no winner
         }
 
-        if (isWin && isWin !== "Draw") {
+        if (isWin) {
           handleSmallBoardWin(isWin);
         }
+        updateActiveBoard(data?.lastMove?.[1]);
         if ($isNewGame) {
           isNewGame.set(false);
         }
@@ -62,12 +64,15 @@
     });
     filledSquares++;
     isWin = checkWin($smallBoardStatus[index]);
-    if (!isWin && filledSquares === 9) {
+        console.log('filledSquares', filledSquares)
+
+    if (!isWin && $smallBoardStatus[index].every((item) => item !== false)) {
+      console.log($smallBoardStatus[index]);
       isWin = "Draw"; // It's a draw if all filled and no winner
     }
     console.log("smallboardstatus before send", $smallBoardStatus);
 
-    if (isWin && isWin !== "Draw") {
+    if (isWin) {
       handleSmallBoardWin(isWin);
     }
     updateActiveBoard(i);

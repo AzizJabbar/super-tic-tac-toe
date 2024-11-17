@@ -15,6 +15,7 @@
   function handleSmallBoardWin(i, winner) {
     let newStatus = $bigBoardStatus.slice();
     newStatus[i] = winner;
+    console.log("fsdfjsdlk", winner)
     bigBoardStatus.set(newStatus);
     isGameEnd.set(checkWin($bigBoardStatus));
     if ($isGameEnd) {
