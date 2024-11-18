@@ -61,7 +61,6 @@
   async function deleteGame() {
     try {
       await remove($gameRef);
-      console.log("Game deleted successfully");
     } catch (error) {
       console.error("Error deleting game:", error);
     }
@@ -75,7 +74,6 @@
   function createRoom() {
     gameId = generateRandom4DigitString();
     gameRef.set(ref(db, `games/game${gameId}`));
-    console.log(gameRef);
     waiting = true;
     set($gameRef, {
       player1: "on",
@@ -86,7 +84,6 @@
     onValue($gameRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        console.log(data);
         if (data.player2 && waiting) {
           waiting = false;
           currentPlayer.set(data.player2 === "X" ? "O" : "X");
@@ -103,7 +100,6 @@
   }
 
   function runDemo() {
-    console.log("demo running");
     intervalId.set(
       setInterval(() => {
         let activeSquare = document.querySelectorAll(".active");

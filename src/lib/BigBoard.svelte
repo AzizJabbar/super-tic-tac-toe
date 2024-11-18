@@ -15,7 +15,6 @@
   function handleSmallBoardWin(i, winner) {
     let newStatus = $bigBoardStatus.slice();
     newStatus[i] = winner;
-    console.log("fsdfjsdlk", winner)
     bigBoardStatus.set(newStatus);
     isGameEnd.set(checkWin($bigBoardStatus));
     if ($isGameEnd) {
@@ -67,7 +66,6 @@
 
   function updateActiveBoard(i) {
     if ($bigBoardStatus[i]) {
-      console.log("bigborrd status", $bigBoardStatus);
       isActive = $bigBoardStatus.map((e) => e === false);
     } else {
       isActive = Array(9).fill(false);

@@ -37,10 +37,7 @@
       const data = snapshot.val();
       if (data?.lastMove?.[0] === index) {
         filledSquares++;
-        console.log("chuyy");
         isWin = checkWin($smallBoardStatus[index]);
-        console.log("isWin", isWin);
-        console.log('filledSquares', filledSquares);
         if (!isWin && $smallBoardStatus[index].every((item) => item !== false)) {
           isWin = "Draw"; // It's a draw if all filled and no winner
         }
@@ -57,20 +54,15 @@
   }
   function handleSquareClick(i) {
     smallBoardStatus.update((value) => {
-      console.log(value);
-      console.log(index);
       value[index][i] = $turn;
       return value;
     });
     filledSquares++;
     isWin = checkWin($smallBoardStatus[index]);
-        console.log('filledSquares', filledSquares)
 
     if (!isWin && $smallBoardStatus[index].every((item) => item !== false)) {
-      console.log($smallBoardStatus[index]);
       isWin = "Draw"; // It's a draw if all filled and no winner
     }
-    console.log("smallboardstatus before send", $smallBoardStatus);
 
     if (isWin) {
       handleSmallBoardWin(isWin);
