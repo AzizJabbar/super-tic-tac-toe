@@ -15,23 +15,33 @@
   import { db } from "./firebase/firebase";
   import writer from "./store/writer";
   import { onMount } from "svelte";
+  import checkGameExists from "./utils/checkGameExists";
 
   let selectMode = false;
   let selectHost = false;
   let enterId = false;
   let waiting = false;
   let gameId = null;
+  let loadingGame = false;
 
-  function handleStartGame() {
+  async function handleStartGame() {
     if (enterId) {
-      gameRef.set(
-        ref(db, `games/game${document.getElementById("input-id").value}`)
-      );
-      currentPlayer.set(Math.random() > 0.5 ? "X" : "O");
-      set($gameRef, {
-        player2: $currentPlayer,
-        turn: "X",
-      });
+      loadingGame = true;
+      const inputId = document.getElementById("input-id").value;
+      const isExist = await checkGameExists(inputId);
+      loadingGame = false;
+      console.log(isExist)
+      if (isExist) {
+        gameRef.set(ref(db, `games/game${inputId}`));
+        currentPlayer.set(Math.random() > 0.5 ? "X" : "O");
+        set($gameRef, {
+          player2: $currentPlayer,
+          turn: "X",
+        });
+      } else {
+        alert("Game not found");
+        return;
+      }
     }
     document.getElementById("menu").style.opacity = "0";
     isNewGame.set(true);
@@ -71,8 +81,13 @@
     return randomNum.toString().padStart(4, "0"); // Pads with leading zeros if necessary
   }
 
-  function createRoom() {
+  async function createRoom() {
     gameId = generateRandom4DigitString();
+    let isExist  = await checkGameExists(gameId)
+    while(isExist) {
+      gameId = generateRandom4DigitString();
+      isExist = await checkGameExists(gameId);
+    }
     gameRef.set(ref(db, `games/game${gameId}`));
     waiting = true;
     set($gameRef, {
@@ -84,6 +99,7 @@
     onValue($gameRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
+        console.log("listener hear data", data);
         if (data.player2 && waiting) {
           waiting = false;
           currentPlayer.set(data.player2 === "X" ? "O" : "X");
@@ -120,7 +136,7 @@
     document.getElementById("menu").style.opacity = "1";
     document.getElementById("menu").style.pointerEvents = "auto";
     document.getElementById("turn").style.opacity = "0";
-    if($gameRef){
+    if ($gameRef) {
       off($gameRef);
       deleteGame();
       gameRef.set(null);
@@ -135,7 +151,7 @@
   }
   $: if ($isGameEnd) {
     document.getElementById("turn").style.opacity = "0";
-    if($intervalId){
+    if ($intervalId) {
       clearInterval($intervalId);
       isGameEnd.set(null);
     }
@@ -183,12 +199,6 @@
               deleteGame();
               gameRef.set(null);
             }}
-            on:keydown={() => {
-              off($gameRef);
-              waiting = false;
-              deleteGame();
-              gameRef.set(null);
-            }}
             class="other-button"
             role="button"
             tabindex="0"
@@ -199,7 +209,6 @@
       {:else if selectMode && !selectHost}
         <div
           on:click={handleStartGame}
-          on:keydown={handleStartGame}
           class="start-button"
           role="button"
           tabindex="0"
@@ -208,7 +217,6 @@
         </div>
         <div
           on:click={() => (selectHost = true)}
-          on:keydown={() => (selectHost = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -217,7 +225,6 @@
         </div>
         <div
           on:click={() => (selectMode = false)}
-          on:keydown={() => (selectMode = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -227,7 +234,6 @@
       {:else if selectHost && !enterId}
         <div
           on:click={() => (enterId = true)}
-          on:keydown={() => (enterId = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -236,16 +242,15 @@
         </div>
         <div
           on:click={createRoom}
-          on:keydown={() => (selectHost = true)}
           class="start-button"
           role="button"
           tabindex="0"
+          style={loadingGame ? "pointer-events: none;" : ""}
         >
-          Host a new game
+          {loadingGame ? "Loading..." : "Host a new game"}
         </div>
         <div
           on:click={() => (selectHost = false)}
-          on:keydown={() => (selectHost = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -261,16 +266,15 @@
         />
         <div
           on:click={handleStartGame}
-          on:keydown={handleStartGame}
           class="start-button"
+          style={loadingGame ? "pointer-events: none;" : ""}
           role="button"
           tabindex="0"
         >
-          Join
+          {loadingGame ? "Loading..." : "Join"}
         </div>
         <div
           on:click={() => (enterId = false)}
-          on:keydown={() => (enterId = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -281,7 +285,6 @@
         <div class="title">Super Tic Tac Toe</div>
         <div
           on:click={() => (selectMode = true)}
-          on:keydown={() => (selectMode = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -291,7 +294,6 @@
       {:else}
         <div
           on:click={() => isGameEnd.set(false)}
-          on:keydown={() => isGameEnd.set(false)}
           class="other-button"
           role="button"
           tabindex="0"
