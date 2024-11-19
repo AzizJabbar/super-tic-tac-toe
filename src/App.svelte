@@ -11,7 +11,14 @@
   } from "./store/store";
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
-  import { ref, onValue, set, off, remove } from "firebase/database";
+  import {
+    ref,
+    onValue,
+    set,
+    off,
+    remove,
+    onDisconnect,
+  } from "firebase/database";
   import { db } from "./firebase/firebase";
   import writer from "./store/writer";
   import { onMount } from "svelte";
@@ -30,7 +37,7 @@
       const inputId = document.getElementById("input-id").value;
       const isExist = await checkGameExists(inputId);
       loadingGame = false;
-      console.log(isExist)
+      console.log(isExist);
       if (isExist) {
         gameRef.set(ref(db, `games/game${inputId}`));
         currentPlayer.set(Math.random() > 0.5 ? "X" : "O");
@@ -53,6 +60,10 @@
     setTimeout(() => {
       intervalId.set(null);
     }, 1000);
+  }
+
+  $: if ($gameRef) {
+    onDisconnect($gameRef).set("Opponent disconnected");
   }
 
   let waitingText = "Waiting for opponent";
@@ -83,8 +94,8 @@
 
   async function createRoom() {
     gameId = generateRandom4DigitString();
-    let isExist  = await checkGameExists(gameId)
-    while(isExist) {
+    let isExist = await checkGameExists(gameId);
+    while (isExist) {
       gameId = generateRandom4DigitString();
       isExist = await checkGameExists(gameId);
     }
@@ -100,6 +111,20 @@
       const data = snapshot.val();
       if (data) {
         console.log("listener hear data", data);
+        if (data === "Opponent disconnected") {
+          isGameEnd.set("Opponent disconnected");
+          const element = document.getElementById("bigBoard");
+
+          if (window.innerWidth > 768) {
+            element.style.left = "30%";
+          }
+          setTimeout(() => {
+            isPlaying.set(false);
+          }, 1000);
+          deleteGame();
+          gameRef.set(null);
+          return;
+        }
         if (data.player2 && waiting) {
           waiting = false;
           currentPlayer.set(data.player2 === "X" ? "O" : "X");
@@ -180,6 +205,8 @@
       {#if $isGameEnd && !$intervalId}
         {#if $isGameEnd === "Draw"}
           <div class="title">Game is draw</div>
+        {:else if $isGameEnd === "Opponent disconnected"}
+          <div class="title">Opponent disconnected</div>
         {:else}
           <div class="title">
             {$isGameEnd} is the winner
