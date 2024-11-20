@@ -114,9 +114,17 @@
         if (data === "Opponent disconnected") {
           isGameEnd.set("Opponent disconnected");
           const element = document.getElementById("bigBoard");
-
-          if (window.innerWidth > 768) {
+          if(window.innerWidth > 1210){
             element.style.left = "30%";
+          }
+          else if(window.innerWidth > 1110){
+            element.style.left = "25%";
+          }
+          else if (window.innerWidth > 948) {
+            element.style.left = "23%";
+          }
+          else{
+            element.style.top = "33%";
           }
           setTimeout(() => {
             isPlaying.set(false);
@@ -362,7 +370,7 @@
     border: none; /* Removes all borders */
     border-bottom: 2px solid var(--orange); /* Adds a bottom border */
     background-color: transparent; /* Makes background transparent */
-    font-size: 32px; /* Sets font size */
+    font-size: 2rem; /* Sets font size */
     padding: 5px; /* Adds some padding (optional) */
     outline: none; /* Removes the outline on focus */
     width: 100%; /* Optional: set desired width */
@@ -387,16 +395,33 @@
     opacity: 1;
   }
 
+  @media (max-width: 1570px) {
+    .menu {
+      left: 73%;
+    }
+  }
+  @media (max-width: 1330px) {
+    .menu {
+      left: 74%;
+    }
+  }
   @media (max-width: 1100px) {
     .menu {
       left: 75%;
     }
+    .title {
+      font-size: 2rem;
+    }
+    .start-button {
+      font-size: 1.5rem;
+      padding: 0.5rem;
+    }
   }
-  @media (max-width: 940px) {
+  /* @media (max-width: 940px) {
     .menu {
       left: 90%;
     }
-  }
+  } */
 
   .other-button {
     background-color: rgba(0, 0, 0, 0.2);
@@ -434,6 +459,7 @@
     color: var(--light-gray);
     font-weight: 500;
     letter-spacing: 0.5px;
+    width: 100%;
   }
 
   @media (max-width: 1200px) {
@@ -444,19 +470,40 @@
       font-size: 1.75rem;
       padding: 0.5rem;
     }
+    .menu{
+      left: 76%;
+    }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 948px) {
+    .turn{
+      font-size: 1.5rem;
+    }
+    .styled-input{
+      font-size: 1.5rem;
+    }
+    .waiting-text{
+      font-size: 0.7rem;
+    }
     .menu {
       left: 50%;
-      top: 70%;
+      top: 73%;
+      gap: 10px;
+      width: 90%
     }
     .title {
-      font-size: 2rem;
+      font-size: 1.5rem;
     }
     .start-button {
       font-size: 1.5rem;
       padding: 0.5rem;
+      min-width: 0;
+    }
+    .other-button {
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      min-width: 0;
+      width: 100%;
     }
   }
 </style>

@@ -20,9 +20,18 @@
     if ($isGameEnd) {
       const element = document.getElementById("bigBoard");
 
-      if (window.innerWidth > 768) {
-        element.style.left = "30%";
-      }
+      if(window.innerWidth > 1210){
+            element.style.left = "30%";
+          }
+          else if(window.innerWidth > 1110){
+            element.style.left = "25%";
+          }
+          else if (window.innerWidth > 948) {
+            element.style.left = "23%";
+          }
+          else{
+            element.style.top = "33%";
+          }
       isActive = Array(9).fill(false);
       setTimeout(() => {
         isPlaying.set(false);
@@ -46,7 +55,9 @@
 
   $: if ($isPlaying) {
     const element = document.getElementById("bigBoard");
-    element.style.left = "50%";
+    if(window.innerWidth > 948){
+      element.style.left = "50%";
+    }
     isActive = Array(9).fill(true);
   }
 
@@ -102,9 +113,19 @@
     position: absolute;
     z-index: 10;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 1210px) {
     .bigBoard {
-      top: 35%;
+      left: 25%;
+    }
+  }
+  @media (max-width: 1110px) {
+    .bigBoard {
+      left: 23%;
+    }
+  }
+  @media (max-width: 948px) {
+    .bigBoard {
+      top: 33%;
       left: 50%;
     }
   }
