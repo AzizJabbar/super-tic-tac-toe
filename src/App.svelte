@@ -171,10 +171,6 @@
     document.getElementById("turn").style.opacity = "0";
     currentPlayer.set(null);
     turn.set("X");
-    if ($intervalId) {
-      clearInterval($intervalId);
-      intervalId.set(null);
-    }
 
     if ($gameRef) {
       off($gameRef);
