@@ -237,6 +237,12 @@
               deleteGame();
               gameRef.set(null);
             }}
+            on:keydown={(e) => e.key === 'Escape' && (() => {
+              off($gameRef);
+              waiting = false;
+              deleteGame();
+              gameRef.set(null);
+            })}
             class="other-button"
             role="button"
             tabindex="0"
@@ -247,6 +253,7 @@
       {:else if selectMode && !selectHost}
         <div
           on:click={handleStartGame}
+          on:keydown={(e) => e.key === 'Enter' && handleStartGame()}
           class="start-button"
           role="button"
           tabindex="0"
@@ -255,6 +262,7 @@
         </div>
         <div
           on:click={() => (selectHost = true)}
+          on:keydown={(e) => e.key === 'Enter' && (selectHost = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -263,6 +271,7 @@
         </div>
         <div
           on:click={() => (selectMode = false)}
+          on:keydown={(e) => e.key === 'Enter' && (selectMode = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -272,6 +281,7 @@
       {:else if selectHost && !enterId}
         <div
           on:click={() => (enterId = true)}
+          on:keydown={(e) => e.key === 'Enter' && (enterId = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -280,6 +290,7 @@
         </div>
         <div
           on:click={createRoom}
+          on:keydown={(e) => e.key === 'Enter' && createRoom()}
           class="start-button"
           role="button"
           tabindex="0"
@@ -289,6 +300,7 @@
         </div>
         <div
           on:click={() => (selectHost = false)}
+          on:keydown={(e) => e.key === 'Escape' && (selectHost = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -304,6 +316,7 @@
         />
         <div
           on:click={handleStartGame}
+          on:keydown={(e) => e.key === 'Enter' && handleStartGame()}
           class="start-button"
           style={loadingGame ? "pointer-events: none;" : ""}
           role="button"
@@ -313,6 +326,7 @@
         </div>
         <div
           on:click={() => (enterId = false)}
+          on:keydown={(e) => e.key === 'Escape' && (enterId = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -323,6 +337,7 @@
         <div class="title">Super Tic Tac Toe</div>
         <div
           on:click={() => (selectMode = true)}
+          on:keydown={(e) => e.key === 'Enter' && (selectMode = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -332,6 +347,7 @@
       {:else}
         <div
           on:click={() => isGameEnd.set(false)}
+          on:keydown={(e) => e.key === 'Escape' && isGameEnd.set(false)}
           class="other-button"
           role="button"
           tabindex="0"
