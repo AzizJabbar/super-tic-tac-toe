@@ -203,10 +203,16 @@
       <Fa icon={faO} />
     {/if}
     {#if $currentPlayer}
-      {#if $currentPlayer !== $turn}
+      {#if $isPlaying && $currentPlayer !== $turn}
         <div class="waiting-text">
           {waitingText}
         </div>
+      {:else}
+        {#if $isPlaying}
+          <div class="waiting-text">
+            Your turn!
+          </div>
+          {/if}
       {/if}
     {/if}
   </div>
