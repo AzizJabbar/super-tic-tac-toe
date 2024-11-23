@@ -38,7 +38,10 @@
       if (data?.lastMove?.[0] === index) {
         filledSquares++;
         isWin = checkWin($smallBoardStatus[index]);
-        if (!isWin && $smallBoardStatus[index].every((item) => item !== false)) {
+        if (
+          !isWin &&
+          $smallBoardStatus[index].every((item) => item !== false)
+        ) {
           isWin = "Draw"; // It's a draw if all filled and no winner
         }
 

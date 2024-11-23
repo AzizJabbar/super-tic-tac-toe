@@ -52,11 +52,27 @@
       </span>
     {/if}
     {#if mark === "X"}
-      <span class="x" style={$lastMove && $currentPlayer === $turn && index === $lastMove[0] && i === $lastMove[1] ? "filter: drop-shadow(0 0 7px var(--white))" : null}>
+      <span
+        class="x"
+        style={$lastMove &&
+        $currentPlayer === $turn &&
+        index === $lastMove[0] &&
+        i === $lastMove[1]
+          ? "filter: drop-shadow(0 0 7px var(--white))"
+          : null}
+      >
         <Fa icon={faX} />
       </span>
     {:else if mark === "O"}
-      <span class="o" style={$lastMove && $currentPlayer === $turn && index === $lastMove[0] && i === $lastMove[1] ? "filter: drop-shadow(0 0 6px var(--white))" : null}>
+      <span
+        class="o"
+        style={$lastMove &&
+        $currentPlayer === $turn &&
+        index === $lastMove[0] &&
+        i === $lastMove[1]
+          ? "filter: drop-shadow(0 0 6px var(--white))"
+          : null}
+      >
         <Fa icon={faO} />
       </span>
     {/if}

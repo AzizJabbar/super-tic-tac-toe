@@ -114,16 +114,13 @@
         if (data === "Opponent disconnected") {
           isGameEnd.set("Opponent disconnected");
           const element = document.getElementById("bigBoard");
-          if(window.innerWidth > 1210){
+          if (window.innerWidth > 1210) {
             element.style.left = "30%";
-          }
-          else if(window.innerWidth > 1110){
+          } else if (window.innerWidth > 1110) {
             element.style.left = "25%";
-          }
-          else if (window.innerWidth > 948) {
+          } else if (window.innerWidth > 948) {
             element.style.left = "23%";
-          }
-          else{
+          } else {
             element.style.top = "33%";
           }
           setTimeout(() => {
@@ -207,12 +204,8 @@
         <div class="waiting-text">
           {waitingText}
         </div>
-      {:else}
-        {#if $isPlaying}
-          <div class="waiting-text">
-            Your turn!
-          </div>
-          {/if}
+      {:else if $isPlaying}
+        <div class="waiting-text">Your turn!</div>
       {/if}
     {/if}
   </div>
@@ -243,12 +236,14 @@
               deleteGame();
               gameRef.set(null);
             }}
-            on:keydown={(e) => e.key === 'Escape' && (() => {
-              off($gameRef);
-              waiting = false;
-              deleteGame();
-              gameRef.set(null);
-            })}
+            on:keydown={(e) =>
+              e.key === "Escape" &&
+              (() => {
+                off($gameRef);
+                waiting = false;
+                deleteGame();
+                gameRef.set(null);
+              })}
             class="other-button"
             role="button"
             tabindex="0"
@@ -259,7 +254,7 @@
       {:else if selectMode && !selectHost}
         <div
           on:click={handleStartGame}
-          on:keydown={(e) => e.key === 'Enter' && handleStartGame()}
+          on:keydown={(e) => e.key === "Enter" && handleStartGame()}
           class="start-button"
           role="button"
           tabindex="0"
@@ -268,7 +263,7 @@
         </div>
         <div
           on:click={() => (selectHost = true)}
-          on:keydown={(e) => e.key === 'Enter' && (selectHost = true)}
+          on:keydown={(e) => e.key === "Enter" && (selectHost = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -277,7 +272,7 @@
         </div>
         <div
           on:click={() => (selectMode = false)}
-          on:keydown={(e) => e.key === 'Enter' && (selectMode = false)}
+          on:keydown={(e) => e.key === "Enter" && (selectMode = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -287,7 +282,7 @@
       {:else if selectHost && !enterId}
         <div
           on:click={() => (enterId = true)}
-          on:keydown={(e) => e.key === 'Enter' && (enterId = true)}
+          on:keydown={(e) => e.key === "Enter" && (enterId = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -296,7 +291,7 @@
         </div>
         <div
           on:click={createRoom}
-          on:keydown={(e) => e.key === 'Enter' && createRoom()}
+          on:keydown={(e) => e.key === "Enter" && createRoom()}
           class="start-button"
           role="button"
           tabindex="0"
@@ -306,7 +301,7 @@
         </div>
         <div
           on:click={() => (selectHost = false)}
-          on:keydown={(e) => e.key === 'Escape' && (selectHost = false)}
+          on:keydown={(e) => e.key === "Escape" && (selectHost = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -322,7 +317,7 @@
         />
         <div
           on:click={handleStartGame}
-          on:keydown={(e) => e.key === 'Enter' && handleStartGame()}
+          on:keydown={(e) => e.key === "Enter" && handleStartGame()}
           class="start-button"
           style={loadingGame ? "pointer-events: none;" : ""}
           role="button"
@@ -332,7 +327,7 @@
         </div>
         <div
           on:click={() => (enterId = false)}
-          on:keydown={(e) => e.key === 'Escape' && (enterId = false)}
+          on:keydown={(e) => e.key === "Escape" && (enterId = false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -343,7 +338,7 @@
         <div class="title">Super Tic Tac Toe</div>
         <div
           on:click={() => (selectMode = true)}
-          on:keydown={(e) => e.key === 'Enter' && (selectMode = true)}
+          on:keydown={(e) => e.key === "Enter" && (selectMode = true)}
           class="start-button"
           role="button"
           tabindex="0"
@@ -353,7 +348,7 @@
       {:else}
         <div
           on:click={() => isGameEnd.set(false)}
-          on:keydown={(e) => e.key === 'Escape' && isGameEnd.set(false)}
+          on:keydown={(e) => e.key === "Escape" && isGameEnd.set(false)}
           class="other-button"
           role="button"
           tabindex="0"
@@ -495,26 +490,26 @@
       font-size: 1.75rem;
       padding: 0.5rem;
     }
-    .menu{
+    .menu {
       left: 76%;
     }
   }
 
   @media (max-width: 948px) {
-    .turn{
+    .turn {
       font-size: 1.5rem;
     }
-    .styled-input{
+    .styled-input {
       font-size: 1.5rem;
     }
-    .waiting-text{
+    .waiting-text {
       font-size: 0.7rem;
     }
     .menu {
       left: 50%;
       top: 73%;
       gap: 10px;
-      width: 90%
+      width: 90%;
     }
     .title {
       font-size: 1.5rem;
