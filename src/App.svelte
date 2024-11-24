@@ -35,10 +35,13 @@
     if (enterId) {
       loadingGame = true;
       const inputId = document.getElementById("input-id").value;
-      const isExist = await checkGameExists(inputId);
+      const {isExist, val} = await checkGameExists(inputId);
       loadingGame = false;
-      console.log(isExist);
       if (isExist) {
+        if(val.smallBoardStatus || val.player1 !== 'on'){
+          alert("Game already started");
+          return;
+        }
         gameRef.set(ref(db, `games/game${inputId}`));
         currentPlayer.set(Math.random() > 0.5 ? "X" : "O");
         set($gameRef, {
@@ -94,10 +97,10 @@
 
   async function createRoom() {
     gameId = generateRandom4DigitString();
-    let isExist = await checkGameExists(gameId);
+    let {isExist, val} = await checkGameExists(gameId);
     while (isExist) {
       gameId = generateRandom4DigitString();
-      isExist = await checkGameExists(gameId);
+      isExist = (await checkGameExists(gameId)).isExist;
     }
     gameRef.set(ref(db, `games/game${gameId}`));
     waiting = true;

@@ -7,13 +7,13 @@ export default async function checkGameExists(gameId) {
     const snapshot = await get(child(dbRef, `games/game${gameId}`));
     if (snapshot.exists()) {
       console.log("Game exists");
-      return true;
+      return {isExist: true, val: snapshot.val()};
     } else {
       console.log("Game does not exist");
-      return false;
+      return {isExist: false, val: null};
     }
   } catch (error) {
     console.error("Error checking if game exists", error);
-    return false;
+    return { isExist: false, val: null };
   }
 }
