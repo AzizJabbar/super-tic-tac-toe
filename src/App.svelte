@@ -26,8 +26,9 @@
   } from "firebase/database";
   import { db } from "./firebase/firebase";
   import writer from "./store/writer";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount, tick } from "svelte";
   import checkGameExists from "./utils/checkGameExists";
+  import Alert from "./lib/Alert.svelte";
 
   let selectMode = false;
   let selectHost = false;
@@ -35,11 +36,13 @@
   let waiting = false;
   let gameId = null;
   let loadingGame = false;
+  let storedValue = null;
 
   async function handleStartGame() {
-    if (enterId) {
+    if (enterId || storedValue) {
       loadingGame = true;
-      const inputId = document.getElementById("input-id").value;
+      const inputId = storedValue || document.getElementById("input-id").value;
+      console.log(inputId);
       const { isExist, val } = await checkGameExists(inputId);
       loadingGame = false;
       if (isExist) {
@@ -64,6 +67,7 @@
             playerNumber.set("player2");
           }
           gameRef.set(ref(db, `games/game${inputId}`));
+          localStorage.setItem("gameRef", inputId);
           isReconnect.set(true);
           set($gameRef, {
             smallBoardStatus: $smallBoardStatus,
@@ -119,24 +123,33 @@
   }
 
   $: if ($gameRef) {
-    onDisconnect($gameRef).set({
-      smallBoardStatus: $smallBoardStatus,
-      turn: $turn,
-      lastMove: $lastMove,
-      player1:
-        $playerNumber === "player1"
-          ? "off"
-          : $currentPlayer === "X"
-            ? "O"
-            : "X",
-      player2:
-        $playerNumber === "player2"
-          ? "off"
-          : $currentPlayer === "X"
-            ? "O"
-            : "X",
-    });
+    if (!waiting) {
+      onDisconnect($gameRef).set({
+        smallBoardStatus: $smallBoardStatus,
+        turn: $turn,
+        lastMove: $lastMove,
+        player1:
+          $playerNumber === "player1"
+            ? "off"
+            : $currentPlayer === "X"
+              ? "O"
+              : "X",
+        player2:
+          $playerNumber === "player2"
+            ? "off"
+            : $currentPlayer === "X"
+              ? "O"
+              : "X",
+      });
+    }
   }
+
+  onDestroy(() => {
+    if (waiting || $opponentDisconnected) {
+      localStorage.removeItem("gameRef");
+      deleteGame();
+    }
+  });
 
   let waitingText = "Waiting for opponent";
   let dotCount = 0;
@@ -171,6 +184,7 @@
       gameId = generateRandom4DigitString();
       isExist = (await checkGameExists(gameId)).isExist;
     }
+    localStorage.setItem("gameRef", gameId);
     gameRef.set(ref(db, `games/game${gameId}`));
     waiting = true;
     playerNumber.set("player1");
@@ -203,7 +217,7 @@
           gameRef.set(null);
           return;
         }
-        if(data.player2 === "off"){
+        if (data.player2 === "off") {
           opponentDisconnected.set(true);
         }
         if (data.player2 && waiting) {
@@ -247,7 +261,8 @@
     turn.set("X");
     lastMove.set(null);
     isReconnect.set(false);
-
+    opponentDisconnected.set(false);
+    localStorage.removeItem("gameRef");
     if ($gameRef) {
       off($gameRef);
       deleteGame();
@@ -271,6 +286,18 @@
 </script>
 
 <main>
+  <Alert
+    message="You have an ongoing game on this browser. Do you want to continue?"
+    show={!!localStorage.getItem("gameRef")}
+    on:confirm={(e) => {
+      if (e.detail.choice === "yes") {
+      storedValue = localStorage.getItem("gameRef");
+      handleStartGame();
+      } else {
+        localStorage.removeItem("gameRef");
+      }
+    }}
+  />
   <div class="turn" id="turn">
     Turn:
     {#if $turn === "X"}
