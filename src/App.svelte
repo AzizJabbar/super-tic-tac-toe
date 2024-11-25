@@ -152,12 +152,14 @@
   });
 
   let waitingText = "Waiting for opponent";
+  let waitingReconnectText = "Opponent disconnected, waiting for reconnection";
   let dotCount = 0;
 
   onMount(() => {
     const interval = setInterval(() => {
       dotCount = (dotCount % 3) + 1; // Cycle dotCount from 1 to 3
       waitingText = "Waiting for opponent" + ".".repeat(dotCount);
+      waitingReconnectText = "Opponent disconnected, waiting for reconnection" + ".".repeat(dotCount);
     }, 500);
 
     // Cleanup interval when the component is destroyed
@@ -219,6 +221,9 @@
         }
         if (data.player2 === "off") {
           opponentDisconnected.set(true);
+        }
+        else{
+          opponentDisconnected.set(false);
         }
         if (data.player2 && waiting) {
           waiting = false;
@@ -308,7 +313,7 @@
     {#if $currentPlayer}
       {#if $isPlaying && $currentPlayer !== $turn}
         <div class="waiting-text">
-          {waitingText}
+            {$opponentDisconnected ? waitingReconnectText : waitingText}
         </div>
       {:else if $isPlaying}
         <div class="waiting-text">Your turn!</div>
