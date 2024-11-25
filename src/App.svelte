@@ -8,6 +8,11 @@
     intervalId,
     gameRef,
     currentPlayer,
+    playerNumber,
+    lastMove,
+    smallBoardStatus,
+    isReconnect,
+    opponentDisconnected,
   } from "./store/store";
   import Fa from "svelte-fa";
   import { faX, faO } from "@fortawesome/free-solid-svg-icons";
@@ -35,15 +40,63 @@
     if (enterId) {
       loadingGame = true;
       const inputId = document.getElementById("input-id").value;
-      const {isExist, val} = await checkGameExists(inputId);
+      const { isExist, val } = await checkGameExists(inputId);
       loadingGame = false;
       if (isExist) {
-        if(val.smallBoardStatus || val.player1 !== 'on'){
+        console.log(val);
+        if (
+          val.player1 !== "on" &&
+          val.player2 !== "off" &&
+          val.player1 !== "off"
+        ) {
           alert("Game already started");
+          return;
+        }
+        if (val.player1 === "off" || val.player2 === "off") {
+          for (const [key, value] of Object.entries(val)) {
+            writer.write(key, value);
+          }
+          if (val.player1 === "off") {
+            $currentPlayer = val.player2 === "X" ? "O" : "X";
+            playerNumber.set("player1");
+          } else {
+            $currentPlayer = val.player1 === "X" ? "O" : "X";
+            playerNumber.set("player2");
+          }
+          gameRef.set(ref(db, `games/game${inputId}`));
+          isReconnect.set(true);
+          set($gameRef, {
+            smallBoardStatus: $smallBoardStatus,
+            turn: $turn,
+            lastMove: $lastMove,
+            player1:
+              $playerNumber === "player1"
+                ? $currentPlayer
+                : $currentPlayer === "X"
+                  ? "O"
+                  : "X",
+            player2:
+              $playerNumber === "player2"
+                ? $currentPlayer
+                : $currentPlayer === "X"
+                  ? "O"
+                  : "X",
+          });
+          document.getElementById("menu").style.opacity = "0";
+          isNewGame.set(true);
+          isPlaying.set(true);
+          enterId = false;
+          waiting = false;
+          selectMode = false;
+          selectHost = false;
+          setTimeout(() => {
+            intervalId.set(null);
+          }, 1000);
           return;
         }
         gameRef.set(ref(db, `games/game${inputId}`));
         currentPlayer.set(Math.random() > 0.5 ? "X" : "O");
+        playerNumber.set("player2");
         set($gameRef, {
           player2: $currentPlayer,
           turn: "X",
@@ -66,7 +119,23 @@
   }
 
   $: if ($gameRef) {
-    onDisconnect($gameRef).set("Opponent disconnected");
+    onDisconnect($gameRef).set({
+      smallBoardStatus: $smallBoardStatus,
+      turn: $turn,
+      lastMove: $lastMove,
+      player1:
+        $playerNumber === "player1"
+          ? "off"
+          : $currentPlayer === "X"
+            ? "O"
+            : "X",
+      player2:
+        $playerNumber === "player2"
+          ? "off"
+          : $currentPlayer === "X"
+            ? "O"
+            : "X",
+    });
   }
 
   let waitingText = "Waiting for opponent";
@@ -97,13 +166,14 @@
 
   async function createRoom() {
     gameId = generateRandom4DigitString();
-    let {isExist, val} = await checkGameExists(gameId);
+    let { isExist, val } = await checkGameExists(gameId);
     while (isExist) {
       gameId = generateRandom4DigitString();
       isExist = (await checkGameExists(gameId)).isExist;
     }
     gameRef.set(ref(db, `games/game${gameId}`));
     waiting = true;
+    playerNumber.set("player1");
     set($gameRef, {
       player1: "on",
     });
@@ -132,6 +202,9 @@
           deleteGame();
           gameRef.set(null);
           return;
+        }
+        if(data.player2 === "off"){
+          opponentDisconnected.set(true);
         }
         if (data.player2 && waiting) {
           waiting = false;
@@ -170,7 +243,10 @@
     document.getElementById("menu").style.pointerEvents = "auto";
     document.getElementById("turn").style.opacity = "0";
     currentPlayer.set(null);
+    playerNumber.set(null);
     turn.set("X");
+    lastMove.set(null);
+    isReconnect.set(false);
 
     if ($gameRef) {
       off($gameRef);

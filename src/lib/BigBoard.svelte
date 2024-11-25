@@ -5,8 +5,10 @@
     isGameEnd,
     isNewGame,
     isPlaying,
+    lastMove,
     currentPlayer,
     turn,
+    isReconnect,
   } from "../store/store";
   import checkWin from "../utils/checkWin";
 
@@ -17,6 +19,7 @@
     newStatus[i] = winner;
     bigBoardStatus.set(newStatus);
     isGameEnd.set(checkWin($bigBoardStatus));
+    console.log('we got the winner', $isGameEnd);
     if ($isGameEnd) {
       const element = document.getElementById("bigBoard");
 
@@ -43,11 +46,13 @@
   }
 
   $: if ($isNewGame) {
-    bigBoardStatus.set(Array(9).fill(false));
+    if(!$isReconnect){
+      bigBoardStatus.set(Array(9).fill(false));
+      isActive = Array(9).fill(true);
+    }
     setTimeout(() => {
       isGameEnd.set(null);
     }, 500);
-    isActive = Array(9).fill(true);
   }
 
   $: if ($isPlaying) {
@@ -55,7 +60,9 @@
     if (window.innerWidth > 948) {
       element.style.left = "50%";
     }
-    isActive = Array(9).fill(true);
+    if(!$isReconnect){
+      isActive = Array(9).fill(true);
+    }
   }
 
   $: if ($isGameEnd) {
@@ -73,6 +80,11 @@
   }
 
   function updateActiveBoard(i) {
+    console.log("iiiiii", i)
+    if(i === "all"){
+      isActive = Array(9).fill(true);
+      return;
+    }
     if ($bigBoardStatus[i]) {
       isActive = $bigBoardStatus.map((e) => e === false);
     } else {

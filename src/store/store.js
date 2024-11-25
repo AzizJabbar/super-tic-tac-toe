@@ -10,8 +10,11 @@ const smallBoardStatus = writable(
 );
 const intervalId = writable(null);
 const currentPlayer = writable(null);
+const playerNumber = writable(null);
 const lastMove = writable(null);
 const gameRef = writable(null);
+const isReconnect = writable(false);
+const opponentDisconnected = writable(false);
 
 export {
   turn,
@@ -22,6 +25,9 @@ export {
   isPlaying,
   intervalId,
   currentPlayer,
+  playerNumber,
   lastMove,
   gameRef,
+  isReconnect,
+  opponentDisconnected,
 };

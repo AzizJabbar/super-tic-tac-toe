@@ -7,6 +7,10 @@
     smallBoardStatus,
     lastMove,
     intervalId,
+    playerNumber,
+    isReconnect,
+    opponentDisconnected,
+    currentPlayer,
   } from "../store/store";
   import checkWin from "../utils/checkWin";
   import Fa from "svelte-fa";
@@ -23,7 +27,12 @@
   let filledSquares = 0;
 
   $: if ($isNewGame) {
-    smallBoardStatus.set(Array.from({ length: 9 }, () => Array(9).fill(false)));
+    if(!$isReconnect){
+      smallBoardStatus.set(Array.from({ length: 9 }, () => Array(9).fill(false)));
+    }
+    if(!$lastMove){
+      updateActiveBoard("all");
+    }
     isWin = null;
     filledSquares = 0;
   }
@@ -81,6 +90,8 @@
         smallBoardStatus: $smallBoardStatus,
         turn: $turn,
         lastMove: [index, i],
+        player1: $playerNumber === "player1" ? $currentPlayer : $opponentDisconnected ? "off": $currentPlayer === "X" ? "O" : "X",
+        player2: $playerNumber === "player2" ? $currentPlayer : $opponentDisconnected ? "off": $currentPlayer === "X" ? "O" : "X",
       });
     }
   }
