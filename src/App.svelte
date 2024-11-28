@@ -29,6 +29,7 @@
   import { onDestroy, onMount, tick } from "svelte";
   import checkGameExists from "./utils/checkGameExists";
   import Alert from "./lib/Alert.svelte";
+  import Modal from "./lib/Modal.svelte";
 
   let selectMode = false;
   let selectHost = false;
@@ -37,6 +38,7 @@
   let gameId = null;
   let loadingGame = false;
   let storedValue = null;
+  let showModal = false;
 
   async function handleStartGame() {
     if (enterId || storedValue) {
@@ -159,7 +161,9 @@
     const interval = setInterval(() => {
       dotCount = (dotCount % 3) + 1; // Cycle dotCount from 1 to 3
       waitingText = "Waiting for opponent" + ".".repeat(dotCount);
-      waitingReconnectText = "Opponent disconnected, waiting for reconnection" + ".".repeat(dotCount);
+      waitingReconnectText =
+        "Opponent disconnected, waiting for reconnection" +
+        ".".repeat(dotCount);
     }, 500);
 
     // Cleanup interval when the component is destroyed
@@ -221,8 +225,7 @@
         }
         if (data.player2 === "off") {
           opponentDisconnected.set(true);
-        }
-        else{
+        } else {
           opponentDisconnected.set(false);
         }
         if (data.player2 && waiting) {
@@ -296,8 +299,8 @@
     show={!!localStorage.getItem("gameRef")}
     on:confirm={(e) => {
       if (e.detail.choice === "yes") {
-      storedValue = localStorage.getItem("gameRef");
-      handleStartGame();
+        storedValue = localStorage.getItem("gameRef");
+        handleStartGame();
       } else {
         localStorage.removeItem("gameRef");
       }
@@ -313,7 +316,7 @@
     {#if $currentPlayer}
       {#if $isPlaying && $currentPlayer !== $turn}
         <div class="waiting-text">
-            {$opponentDisconnected ? waitingReconnectText : waitingText}
+          {$opponentDisconnected ? waitingReconnectText : waitingText}
         </div>
       {:else if $isPlaying}
         <div class="waiting-text">Your turn!</div>
@@ -456,6 +459,13 @@
         >
           Play
         </div>
+        <div
+          class="other-button"
+          on:click={() => (showModal = true)}
+          type="button"
+        >
+          How to play
+        </div>
       {:else}
         <div
           on:click={() => isGameEnd.set(false)}
@@ -467,9 +477,15 @@
           Back to Home
         </div>
       {/if}
-      <!-- <div class="other-button">How to play</div> -->
     </div>
   </div>
+  <Modal
+    bind:show={showModal}
+    title="How to play"
+    on:close={() => (showModal = false)}
+  >
+    <p>This is a custom message inside the modal!</p>
+  </Modal>
 </main>
 
 <style>
