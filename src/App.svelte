@@ -30,6 +30,7 @@
   import checkGameExists from "./utils/checkGameExists";
   import Alert from "./lib/Alert.svelte";
   import Modal from "./lib/Modal.svelte";
+  import ImageSlider from "./lib/ImageSlider.svelte";
 
   let selectMode = false;
   let selectHost = false;
@@ -484,7 +485,18 @@
     title="How to play"
     on:close={() => (showModal = false)}
   >
-    <p>This is a custom message inside the modal!</p>
+    <ImageSlider
+      images={["/9-grid.png", "/first-turn.png", "/next-turn.png", "/smallboard-win.png", "/smallboard-full.png", "/win.png", "/draw.png"]}
+      text={[
+        "The game consists of 9 smaller tic-tac-toe boards arranged in a 3x3 grid. Each smaller board represents a 'cell' in the larger tic-tac-toe game.",
+        "Player X and Player O take turns. The first player can place their mark (X or O) in any cell of any small board.",
+        "The position of a mark in a small board decides the next small board to play; e.g., marking the top-left cell sends the next move to the top-left board.",
+        "A player wins a small board by forming a line, after which it is 'closed' and marked as their win.",
+        "If a small board is full without a winner or is already won, the next player can play in any other open small board.",
+        "A player wins the entire game by winning three small boards in a row, column, or diagonal on the larger board.",
+        "If no one wins and all boards are filled, the game ends in a draw."
+      ]}
+    />
   </Modal>
 </main>
 
