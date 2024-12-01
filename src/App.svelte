@@ -289,7 +289,6 @@
     document.getElementById("turn").style.opacity = "0";
     if ($intervalId) {
       clearInterval($intervalId);
-      isGameEnd.set(null);
     }
   }
 </script>
@@ -449,7 +448,7 @@
         >
           Back
         </div>
-      {:else if !$isGameEnd}
+      {:else if !$isGameEnd || $intervalId}
         <div class="title">Super Tic Tac Toe</div>
         <div
           on:click={() => (selectMode = true)}
