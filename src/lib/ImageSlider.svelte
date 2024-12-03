@@ -78,6 +78,9 @@
     height: 400px;
     object-fit: contain;
     border-radius: 8px;
+    @media (max-width: 768px) {
+      height: 300px;
+    }
   }
 
   .navigation {
@@ -88,6 +91,10 @@
     justify-content: space-between;
     width: 100%;
     padding: 0 1rem;
+    @media (max-width: 768px) {
+      bottom: 0;
+      top: auto;
+    }
   }
 
   .nav-button {
@@ -120,6 +127,10 @@
   .image-caption {
     margin-bottom: 3rem;
     text-align: center;
+    @media (max-width: 768px) {
+      margin-bottom: 5rem;
+      height: 75px;
+    }
   }
 
   .indicator {

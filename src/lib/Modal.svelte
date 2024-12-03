@@ -44,10 +44,10 @@
         <slot>Default modal content</slot>
       </div>
 
-      <div class="modal-footer">
-        <button class="cancel" on:click={closeModal}>Close</button>
+      <!-- <div class="modal-footer"> -->
+        <!-- <button class="cancel" on:click={closeModal}>Close</button> -->
         <!-- <button class="confirm" on:click={handleConfirm}>Confirm</button> -->
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 {/if}
@@ -72,12 +72,16 @@
     border-radius: 8px;
     width: 80%;
     /* max-width: 500px; */
+    
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    @media (max-width: 768px) {
+      height: 70vh;
+    }
   }
 
   .modal-header {
